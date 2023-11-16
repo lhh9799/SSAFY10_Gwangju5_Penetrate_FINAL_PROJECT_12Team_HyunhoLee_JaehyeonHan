@@ -43,6 +43,10 @@ function deleteComment(commentNo, success, fail) {
   local.delete(`${url}/comment/${commentNo}`).then(success).catch(fail);
 }
 
+function getBlogArticle(blogUrl, success, fail) {
+  local.get(`${url}/blog/${blogUrl}`).then(success).catch(fail);
+}
+
 export {
   listArticle,
   detailArticle,
@@ -53,4 +57,5 @@ export {
   modifyComment,
   writeComment,
   deleteComment,
+  getBlogArticle,
 };

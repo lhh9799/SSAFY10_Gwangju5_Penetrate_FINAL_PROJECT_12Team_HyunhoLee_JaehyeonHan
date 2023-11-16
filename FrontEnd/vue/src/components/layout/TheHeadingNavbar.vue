@@ -69,6 +69,18 @@ const logout = () => {
           <li class="nav-item">
             <router-link :to="{ name: 'estations' }" class="nav-link">전기차충전소</router-link>
           </li>
+          <!-- 이현호 테스트 Vue Draggable -->
+          <li class="nav-item">
+            <router-link :to="{ name: 'draggable' }" class="nav-link">Vue 3 Draggable 테스트</router-link>
+          </li>
+          <!-- 이현호 테스트 Vue3-quill -->
+          <li class="nav-item">
+            <router-link :to="{ name: 'quill' }" class="nav-link">Vue 3 quill 테스트</router-link>
+          </li>
+          <!-- 이현호 테스트 Vue3-quill -->
+          <li class="nav-item">
+            <router-link :to="{ name: 'crawling' }" class="nav-link">crawling 테스트</router-link>
+          </li>
         </ul>
         <!-- <form class="d-flex" role="search">
           <input
