@@ -71,6 +71,24 @@ const router = createRouter({
       name: "todos",
       component: () => import("@/views/TheTodoView.vue"),
     },
+    //이현호 테스트 Vue Draggable
+    {
+      path: "/draggable",
+      name: "draggable",
+      component: () => import("@/views/TheDraggableView.vue"),
+    },
+    //이현호 테스트 Vue quill
+    {
+      path: "/quill",
+      name: "quill",
+      component: () => import("@/views/TheQuillView.vue"),
+    },
+    //이현호 테스트 v-html
+    {
+      path: "/crawling",
+      name: "crawling",
+      component: () => import("@/views/TheCrawlingView.vue"),
+    },
   ],
 });
 
