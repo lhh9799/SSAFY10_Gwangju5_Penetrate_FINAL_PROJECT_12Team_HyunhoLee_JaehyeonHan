@@ -1,92 +1,59 @@
-# SSAFY10_광주5_관통_FINAL_PROJECT_12팀_이현호_한재현
+# SSAFY10_광주5_관통_Vuejs_12팀_이현호_한재현 (EnjoyTrip_Vuejs)
 
+[구현]
+1) 메뉴에 QnA 게시판 추가
+2) 게시글 목록 서비스
+3) 게시글 입력 서비스
+4) 게시글 수정, 삭제, 상세 검색 서비스
 
+## 메인
 
-## Getting started
+### (그림 1) 메인 페이지
+![Screenshot_2023-11-12_at_17.08.31](/uploads/a2ac48c0bce509d3f2437b43620e0e1f/Screenshot_2023-11-12_at_17.08.31.png)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### (그림 2-1) 게시판 메인 (글 목록)
+![Screenshot_2023-11-12_at_17.08.40](/uploads/6a0c85af9de92b63a72c39152f9eea09/Screenshot_2023-11-12_at_17.08.40.png)
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### (그림 2-2) 게시글 상세
+![Screenshot_2023-11-12_at_17.08.46](/uploads/8fb31425a562b8d839eb4b575adaec77/Screenshot_2023-11-12_at_17.08.46.png)
 
-## Add your files
+## 댓글
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### (그림 3-1) 댓글 작성
+![Screenshot_2023-11-12_at_17.09.34](/uploads/9a56e1044f5e8fdf2917d56a46845c2d/Screenshot_2023-11-12_at_17.09.34.png)
 
-```
-cd existing_repo
-git remote add origin https://lab.ssafy.com/lhh9799/EnjoyTrip_FINAL_PROJECT.git
-git branch -M master
-git push -uf origin master
-```
+### (그림 3-2) 댓글 수정
+![2023-11-12_17-32-50](/uploads/9845dba6f072cfcdb39de22ab05e6449/2023-11-12_17-32-50.gif)
 
-## Integrate with your tools
+![Screenshot_2023-11-12_at_17.09.37](/uploads/818c79fe62db220f784e96d2cfdba50d/Screenshot_2023-11-12_at_17.09.37.png)
 
-- [ ] [Set up project integrations](https://lab.ssafy.com/lhh9799/EnjoyTrip_FINAL_PROJECT/-/settings/integrations)
+## (그림 3-3) 댓글 삭제
+![Screenshot_2023-11-12_at_17.09.05](/uploads/f44bd55957b74bdbfca7f55c8e120c74/Screenshot_2023-11-12_at_17.09.05.png)
 
-## Collaborate with your team
+![스크린샷_2023-11-12_170916](/uploads/a7fe54df58b7fad8fad9cfb02b42ead4/스크린샷_2023-11-12_170916.png)
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+![Screenshot_2023-11-12_at_17.09.21](/uploads/27b828dc2cc7f81d10c6c7d9129e8df4/Screenshot_2023-11-12_at_17.09.21.png)
 
-## Test and Deploy
+## 게시글
 
-Use the built-in continuous integration in GitLab.
+### (그림 4-1) 글 작성
+![Screenshot_2023-11-12_at_17.12.11](/uploads/b3657457e2441ef52f7bca9de4837656/Screenshot_2023-11-12_at_17.12.11.png)
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+![Screenshot_2023-11-12_at_17.12.20](/uploads/f88f5114f442af84ad1e71a968c7b4be/Screenshot_2023-11-12_at_17.12.20.png)
 
-***
+![Screenshot_2023-11-12_at_17.12.22](/uploads/6d521350aee00f009608b8e413e89ee8/Screenshot_2023-11-12_at_17.12.22.png)
 
-# Editing this README
+### (그림 4-2) 글 수정
+![Screenshot_2023-11-12_at_17.10.01](/uploads/5d828071d6a4e677362e301899ad044c/Screenshot_2023-11-12_at_17.10.01.png)
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+![Screenshot_2023-11-12_at_17.11.10](/uploads/c929848fde624be970885f5c150c05be/Screenshot_2023-11-12_at_17.11.10.png)
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+![Screenshot_2023-11-12_at_17.11.13](/uploads/46361eb0b025eb56d4eff8ea634ed016/Screenshot_2023-11-12_at_17.11.13.png)
 
-## Name
-Choose a self-explaining name for your project.
+### (그림 4-3) 글 삭제
+![2023-11-12_17-49-43](/uploads/7de427b783d307efa5a9460dca046976/2023-11-12_17-49-43.gif)
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## 번외
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### 전기차 충전소 찾기 (2023.11.10. 라이브 내용)
+![Screenshot_2023-11-12_at_17.27.10](/uploads/5b2c08db055f3a25196f8c9dd09478be/Screenshot_2023-11-12_at_17.27.10.png)
