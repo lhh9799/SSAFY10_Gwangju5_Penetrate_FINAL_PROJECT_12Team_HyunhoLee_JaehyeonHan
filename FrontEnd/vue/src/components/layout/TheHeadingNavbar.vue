@@ -1,16 +1,20 @@
 <script setup>
 import { useMenuStore } from "@/stores/menu";
 import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
 
 const menuStore = useMenuStore();
+const memberStore = useMemberStore();
 
 // 반응형을 유지하면서 스토어에서 속성을 추출하려면, storeToRefs()를 사용
 // https://pinia.vuejs.kr/core-concepts/
 const { menuList } = storeToRefs(menuStore);
 const { changeMenuState } = menuStore;
+const { userLogout } = memberStore;
 
 const logout = () => {
   console.log("로그아웃!!!!");
+  userLogout();
   changeMenuState();
 };
 </script>
@@ -71,7 +75,9 @@ const logout = () => {
           </li>
           <!-- 이현호 테스트 Vue Draggable -->
           <li class="nav-item">
-            <router-link :to="{ name: 'draggable' }" class="nav-link">Vue 3 Draggable 테스트</router-link>
+            <router-link :to="{ name: 'draggable' }" class="nav-link"
+              >Vue 3 Draggable 테스트</router-link
+            >
           </li>
           <!-- 이현호 테스트 Vue3-quill -->
           <li class="nav-item">
