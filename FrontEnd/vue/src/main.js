@@ -19,3 +19,11 @@ app.use(pinia);
 app.use(router);
 
 app.mount("#app");
+
+/*
+//이현호 추가 시작 --[방법 2] quill 전역 설정
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+app.component('QuillEditor', QuillEditor)
+//이현호 추가 끝
+*/
