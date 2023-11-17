@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
@@ -13,6 +13,7 @@ const { isLogin } = storeToRefs(memberStore);
 const { userLogin, getUserInfo } = memberStore;
 const { changeMenuState } = useMenuStore();
 
+const focusDesignator = ref();
 const loginUser = ref({
   userId: "",
   userPwd: "",
@@ -32,7 +33,14 @@ const login = async () => {
   }
   router.push("/");
 };
+
+onMounted(async () => {
+  await nextTick();
+  focusDesignator.value.focus();
+});
 </script>
+
+<style scoped></style>
 
 <template>
   <div class="container">
@@ -45,26 +53,29 @@ const login = async () => {
       <div class="col-lg-10">
         <form>
           <div class="form-check mb-3 float-end">
-            <input class="form-check-input" type="checkbox" />
-            <label class="form-check-label" for="saveid"> 아이디저장 </label>
+            <input class="form-check-input" type="checkbox" id="saveid"/>
+            <label class="form-check-label" for='saveid'> 아이디저장 </label>
           </div>
           <div class="mb-3 text-start">
-            <label for="userid" class="form-label">아이디 : </label>
+            <label class="form-label" for='userId'>아이디 : </label>
             <input
               type="text"
               class="form-control"
               v-model="loginUser.userId"
+              ref='focusDesignator'
               placeholder="아이디..."
+              id='userId'
             />
           </div>
           <div class="mb-3 text-start">
-            <label for="userpwd" class="form-label">비밀번호 : </label>
+            <label class="form-label" for='userPwd'>비밀번호 : </label>
             <input
               type="password"
               class="form-control"
               v-model="loginUser.userPwd"
               @keyup.enter="login"
               placeholder="비밀번호..."
+              id='userPwd'
             />
           </div>
           <div class="col-auto text-center">
@@ -78,5 +89,3 @@ const login = async () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>
