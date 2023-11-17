@@ -44,4 +44,10 @@
 		where user_id = #{userId}
 	</update>
 	
+	<!-- 이현호 추가 -->
+	<insert id="join">
+		INSERT INTO members (user_id, user_name, user_password, email_id, email_domain, join_date)
+		VALUES (#{userId}, #{userName}, #{userPwd}, #{emailId}, #{emailDomain}, now())
+	</insert>
+	
 </mapper>

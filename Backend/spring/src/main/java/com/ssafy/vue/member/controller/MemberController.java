@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/user")
 @Slf4j
 public class MemberController {
-	
+
 	private MemberService memberService;
 	private JWTUtil jwtUtil;
 
@@ -45,25 +45,25 @@ public class MemberController {
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
 			MemberDto loginUser = memberService.login(memberDto);
-			if(loginUser != null) {
+			if (loginUser != null) {
 				String accessToken = jwtUtil.createAccessToken(loginUser.getUserId());
 				String refreshToken = jwtUtil.createRefreshToken(loginUser.getUserId());
 				log.debug("access token : {}", accessToken);
 				log.debug("refresh token : {}", refreshToken);
-				
+
 //				발급받은 refresh token을 DB에 저장.
 				memberService.saveRefreshToken(loginUser.getUserId(), refreshToken);
-				
+
 //				JSON으로 token 전달.
 				resultMap.put("access-token", accessToken);
 				resultMap.put("refresh-token", refreshToken);
-				
+
 				status = HttpStatus.CREATED;
 			} else {
 				resultMap.put("message", "아이디 또는 패스워드를 확인해주세요.");
 				status = HttpStatus.UNAUTHORIZED;
-			} 
-			
+			}
+
 		} catch (Exception e) {
 			log.debug("로그인 에러 발생 : {}", e);
 			resultMap.put("message", e.getMessage());
@@ -71,7 +71,7 @@ public class MemberController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
-	
+
 	@ApiOperation(value = "회원인증", notes = "회원 정보를 담은 Token을 반환한다.", response = Map.class)
 	@GetMapping("/info/{userId}")
 	public ResponseEntity<Map<String, Object>> getInfo(
@@ -101,7 +101,8 @@ public class MemberController {
 
 	@ApiOperation(value = "로그아웃", notes = "회원 정보를 담은 Token을 제거한다.", response = Map.class)
 	@GetMapping("/logout/{userId}")
-	public ResponseEntity<?> removeToken(@PathVariable ("userId") @ApiParam(value = "로그아웃할 회원의 아이디.", required = true) String userId) {
+	public ResponseEntity<?> removeToken(
+			@PathVariable("userId") @ApiParam(value = "로그아웃할 회원의 아이디.", required = true) String userId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
@@ -137,5 +138,26 @@ public class MemberController {
 			status = HttpStatus.UNAUTHORIZED;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	@ApiOperation(value = "회원가입", notes = "전달받은 아이디와 비밀번호로 회원가입 처리.")
+	@PostMapping("/join")
+	public ResponseEntity<?> join(
+			@RequestBody @ApiParam(value = "로그인 시 필요한 회원정보(아이디, 비밀번호).", required = true) MemberDto memberDto) {
+		log.debug("join user : {}", memberDto);
+		System.out.println("전달받은 memberDto: " + memberDto);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.join(memberDto);
+			//이현호 실험
+			return new ResponseEntity<Void>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			log.debug("회원가입 에러 발생 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			//이현호 실험
+			return new ResponseEntity<Map<String, Object>>(resultMap, status);
+		}
 	}
 }
