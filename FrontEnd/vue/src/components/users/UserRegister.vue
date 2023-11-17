@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
 
 const memberStore = useMemberStore();
 const { userJoin } = memberStore;
 const router = useRouter();
+
+const focusDesignator = ref();
 
 const joinUser = ref({
   userId: '',
@@ -16,10 +18,6 @@ const joinUser = ref({
   emailDomain: '',
 });
 
-// const join = async () => {
-//   console.log('회원가입 시도!');
-// }
-
 async function onSubmit() {
   if (joinUser.value.userPwd != joinUser.value.pwdcheck) {
     console.log('비밀번호 일치확인 걸림');
@@ -29,12 +27,15 @@ async function onSubmit() {
   }
   else {
     //API 호출
-    // await userJoin(joinUser);
     await userJoin(JSON.stringify(joinUser.value));
-    console.log('회원가입 됨');
     router.replace("/");
   }
 }
+
+onMounted(async () => {
+  await nextTick();
+  focusDesignator.value.focus();
+});
 </script>
 
 <template>
@@ -49,7 +50,7 @@ async function onSubmit() {
         <form>
           <div class="mb-3">
             <label for="username" class="form-label">이름 : </label>
-            <input type="text" class="form-control" id='username' placeholder="이름..." required='required' v-model='joinUser.userName' />
+            <input type="text" class="form-control" id='username' placeholder="이름..." required='required' v-model='joinUser.userName' ref='focusDesignator' />
           </div>
           <div class="mb-3">
             <label for="userid" class="form-label">아이디 : </label>
