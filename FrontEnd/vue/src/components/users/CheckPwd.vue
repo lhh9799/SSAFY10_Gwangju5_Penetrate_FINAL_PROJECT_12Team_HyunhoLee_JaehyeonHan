@@ -1,26 +1,10 @@
 <script setup>
-import { ref } from "vue";
-import { useMemberStore } from "@/stores/member";
 import { useRouter } from "vue-router";
-
-const memberStore = useMemberStore();
 const router = useRouter();
 
-const { userModifyPwd } = memberStore;
-const modifyPwd = ref({
-  userPwd: "",
-  newUserPwd: "",
-  newUserPwdCheck: "",
-});
-
-async function onSubmit() {
-  if (modifyPwd.value.newUserPwd != modifyPwd.value.newUserPwdCheck) {
-    console.log("비밀번호 일치확인 걸림");
-    alert("비밀번호와 비밀번호 확인을 확인해주세요!");
-  } else {
-    await userModifyPwd(JSON.stringify(modifyPwd.value));
-    router.replace("/");
-  }
+async function onSubmit() {}
+async function onCancel() {
+  router.replace("/");
 }
 </script>
 
@@ -32,29 +16,19 @@ async function onSubmit() {
           <div class="modal-header">
             <div class="modal-body">
               <div class="container-md m-3 p-3">
-                <h2>비밀번호 수정</h2>
+                <h2>비밀번호 확인</h2>
               </div>
               <input type="hidden" name="action" value="modifyPwd" />
               <div class="input-group mb-3"></div>
+              <div class="input-group mb-3"></div>
               <div class="input-group mb-3">
-                <span class="input-group-text">새로운 비밀번호</span>
+                <span class="input-group-text">비밀번호 확인</span>
                 <input
                   type="password"
-                  id="newUserPwd"
+                  id="UserPwd"
+                  name="UserPwd"
                   class="form-control"
-                  placeholder="새로운 비밀번호를 입력해주세요"
-                  v-model="modifyPwd.newUserPwd"
-                  required
-                />
-              </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text">새로운 비밀번호 확인</span>
-                <input
-                  type="password"
-                  id="newUserPwdCheck"
-                  class="form-control"
-                  placeholder="새로운 비밀번호와 똑같이 입력해주세요"
-                  v-model="modifyPwd.newUserPwdCheck"
+                  placeholder="비밀번호를 입력해주세요."
                   required
                 />
               </div>
@@ -65,13 +39,13 @@ async function onSubmit() {
                   class="btn btn-outline-primary"
                   @click.prevent="onSubmit"
                 >
-                  변경
+                  확인
                 </button>
                 <button
                   type="button"
                   class="btn btn-outline-danger"
                   data-bs-dismiss="modal"
-                  @click="$emit('close')"
+                  @click.prevent="onCancel"
                 >
                   취소
                 </button>
