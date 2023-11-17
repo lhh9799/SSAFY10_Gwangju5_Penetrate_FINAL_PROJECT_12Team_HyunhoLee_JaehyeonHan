@@ -160,4 +160,23 @@ public class MemberController {
 			return new ResponseEntity<Map<String, Object>>(resultMap, status);
 		}
 	}
+	
+	// 한재현 추가
+	@ApiOperation(value = "회원 탈퇴", notes = "회원을 탈퇴시킨다.", response = Map.class)
+	@GetMapping("/delete/{userId}")
+	public ResponseEntity<?> DeleteUser(@PathVariable ("userId") @ApiParam(value = "로그아웃할 회원의 아이디.", required = true) String userId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.delete(userId);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			log.error("회원탈퇴 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+
+	}
+
 }

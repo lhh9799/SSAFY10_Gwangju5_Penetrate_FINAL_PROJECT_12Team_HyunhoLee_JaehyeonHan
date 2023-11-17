@@ -26,4 +26,8 @@ async function join(joinUser, success, fail) {
   await local.post(`/user/join`, joinUser).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout, join };
+async function withdraw(userid, success, fail) {
+  await local.get(`/user/delete/${userid}`).then(success).catch(fail);
+}
+
+export { userConfirm, findById, tokenRegeneration, logout, join, withdraw };

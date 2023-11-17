@@ -1,4 +1,17 @@
-<script setup></script>
+<script>
+import Modal from "./UserDelete.vue";
+
+export default {
+  data() {
+    return {
+      showModal: false,
+    };
+  },
+  components: {
+    Modal,
+  },
+};
+</script>
 
 <template>
   <div class="container">
@@ -31,6 +44,19 @@
         </div>
         <div>
           <button type="button" class="btn btn-outline-secondary mt-2">수정</button>
+          <div>
+            <button
+              type="button"
+              class="btn btn-outline-secondary mt-2"
+              style="color: white; background-color: red"
+              @click="showModal = true"
+            >
+              탈퇴
+            </button>
+            <Modal v-if="showModal" @close="showModal = false">
+              <h3 slot="header">모달 창 제목</h3>
+            </Modal>
+          </div>
         </div>
       </div>
     </div>

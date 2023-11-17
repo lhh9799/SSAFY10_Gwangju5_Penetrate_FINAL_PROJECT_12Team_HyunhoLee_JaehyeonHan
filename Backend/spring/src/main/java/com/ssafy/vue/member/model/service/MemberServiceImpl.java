@@ -54,5 +54,11 @@ public class MemberServiceImpl implements MemberService {
 	public void join(MemberDto memberDto) throws SQLException {
 		memberMapper.join(memberDto);
 	}
+	
+	@Override
+	public void delete(String userId) throws SQLException {
+		memberMapper.delete(userId);
+		System.out.println("userID = " + userId);
+	}
 
 }

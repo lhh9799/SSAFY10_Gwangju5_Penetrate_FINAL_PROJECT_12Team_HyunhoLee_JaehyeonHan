@@ -13,4 +13,6 @@ public interface MemberService {
 	void deleRefreshToken(String userId) throws Exception;
 	//이현호 추가
 	void join(MemberDto memberDto) throws SQLException;
+	//한재현 추가
+	void delete(String userId) throws SQLException;
 }

@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import { userConfirm, findById, tokenRegeneration, logout, join } from "@/api/user";
+import { userConfirm, findById, tokenRegeneration, logout, join, withdraw } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -136,12 +136,28 @@ export const useMemberStore = defineStore("memberStore", () => {
       joinUser,
       (response) => {
         if (response.status === httpStatusCode.OK || response.status === httpStatusCode.CREATE) {
-          console.log('회원가입 정상 처리');
-          alert('회원가입 되었습니다!');
+          console.log("회원가입 정상 처리");
+          alert("회원가입 되었습니다!");
         } else {
-          console.log('response.status');
+          console.log("response.status");
           console.log(response.status);
-          console.error('회원가입 중 오류 발생 (서버 측)');
+          console.error("회원가입 중 오류 발생 (서버 측)");
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
+  const userWithdraw = async (userid) => {
+    await withdraw(
+      userid,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          console.log("유저 탈퇴 완료!!!");
+        } else {
+          console.error("유저 정보 없음!!!!");
         }
       },
       (error) => {
@@ -160,5 +176,6 @@ export const useMemberStore = defineStore("memberStore", () => {
     tokenRegenerate,
     userLogout,
     userJoin,
+    userWithdraw,
   };
 });

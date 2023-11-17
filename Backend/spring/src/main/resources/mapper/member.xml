@@ -50,4 +50,10 @@
 		VALUES (#{userId}, #{userName}, #{userPwd}, #{emailId}, #{emailDomain}, now())
 	</insert>
 	
+	<!-- 한재현 추가 -->
+	<delete id="delete">
+		DELETE FROM members
+		WHERE user_id = #{userId}
+	</delete>
+	
 </mapper>
