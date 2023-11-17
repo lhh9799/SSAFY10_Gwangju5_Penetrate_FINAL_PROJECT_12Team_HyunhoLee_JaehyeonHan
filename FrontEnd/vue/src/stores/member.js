@@ -3,7 +3,15 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import { userConfirm, findById, tokenRegeneration, logout, join, withdraw } from "@/api/user";
+import {
+  userConfirm,
+  findById,
+  tokenRegeneration,
+  logout,
+  join,
+  withdraw,
+  modifyPassword,
+} from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -166,6 +174,22 @@ export const useMemberStore = defineStore("memberStore", () => {
     );
   };
 
+  const userModifyPwd = async (modifyPwd) => {
+    await modifyPassword(
+      modifyPwd,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          console.log("유저 탈퇴 완료!!!");
+        } else {
+          console.error("유저 정보 없음!!!!");
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
   return {
     isLogin,
     isLoginError,
@@ -177,5 +201,11 @@ export const useMemberStore = defineStore("memberStore", () => {
     userLogout,
     userJoin,
     userWithdraw,
+    userModifyPwd,
   };
+  // {
+  //   persist: {
+  //     storage: sessionStorage,
+  //   },
+  // }
 });

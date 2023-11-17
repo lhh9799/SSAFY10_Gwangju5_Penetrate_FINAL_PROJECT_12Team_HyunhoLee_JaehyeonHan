@@ -1,14 +1,17 @@
 <script>
-import Modal from "./UserDelete.vue";
+import Withdraw from "./UserWithdraw.vue";
+import Modify from "./ModifyPwd.vue";
 
 export default {
   data() {
     return {
-      showModal: false,
+      showModify: false,
+      showWithdraw: false,
     };
   },
   components: {
-    Modal,
+    Withdraw,
+    Modify,
   },
 };
 </script>
@@ -43,19 +46,24 @@ export default {
           </div>
         </div>
         <div>
-          <button type="button" class="btn btn-outline-secondary mt-2">수정</button>
+          <button type="button" class="btn btn-outline-secondary mt-2" @click="showModify = true">
+            비밀번호 변경
+          </button>
+          <Modify v-if="showModify" @close="showModify = false">
+            <h3 slot="header">모달 창 제목</h3>
+          </Modify>
           <div>
             <button
               type="button"
               class="btn btn-outline-secondary mt-2"
               style="color: white; background-color: red"
-              @click="showModal = true"
+              @click="showWithdraw = true"
             >
               탈퇴
             </button>
-            <Modal v-if="showModal" @close="showModal = false">
+            <Withdraw v-if="showWithdraw" @close="showWithdraw = false">
               <h3 slot="header">모달 창 제목</h3>
-            </Modal>
+            </Withdraw>
           </div>
         </div>
       </div>

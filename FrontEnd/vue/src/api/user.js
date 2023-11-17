@@ -30,4 +30,8 @@ async function withdraw(userid, success, fail) {
   await local.get(`/user/delete/${userid}`).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout, join, withdraw };
+async function modifyPassword(modifyPwd, success, fail) {
+  await local.post(`/user/modify`, modifyPwd).then(success).catch(fail);
+}
+
+export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, modifyPassword };
