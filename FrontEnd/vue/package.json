@@ -12,6 +12,7 @@
     "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.6.1",
     "bootstrap": "^5.3.1",
+    "highlight.js": "^11.9.0",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
