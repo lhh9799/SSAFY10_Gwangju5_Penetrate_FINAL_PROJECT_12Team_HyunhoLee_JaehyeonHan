@@ -115,33 +115,36 @@ function writeArticle() {
 
 <template>
   <div class="example">
-    <div class="mb-3">
-      <label for="subject" class="form-label">제목 : </label>
-      <input type="text" class="form-control" v-model="article.subject" placeholder="제목..." />
-    </div>
-    <quill-editor
-      class="editor"
-      ref="myTextEditor"
-      :disabled="false"
-      :value="content"
-      :options="editorOption"
-      @change="onEditorChange"
-      @blur="onEditorBlur($event)"
-      @focus="onEditorFocus($event)"
-      @ready="onEditorReady($event)"
-    />
+    <div>
+      <div class="mb-3">
+        <label for="subject" class="form-label">제목 : </label>
+        <input type="text" class="form-control" v-model="article.subject" placeholder="제목..." />
+      </div>
+      <quill-editor
+        class="editor"
+        ref="myTextEditor"
+        :disabled="false"
+        :value="content"
+        :options="editorOption"
+        @change="onEditorChange"
+        @blur="onEditorBlur($event)"
+        @focus="onEditorFocus($event)"
+        @ready="onEditorReady($event)"
+      />
 
-    <div class="output ql-snow">
-      <div v-html="content"></div>
-    </div>
+      <div class="output ql-snow">
+        <div v-html="content"></div>
+      </div>
 
-  <button @click='writeArticle()'>작성하기</button>
+    <button @click='writeArticle()'>작성하기</button>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .example {
-  width: 80%;
-  margin: auto;
+  /* width: 80%; */
+  /* margin: auto; */
+  min-width: 0px;
 }
 </style>

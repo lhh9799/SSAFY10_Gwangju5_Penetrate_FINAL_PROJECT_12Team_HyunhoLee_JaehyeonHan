@@ -88,12 +88,6 @@ const router = createRouter({
       name: "quill",
       component: () => import("@/views/TheQuillView.vue"),
     },
-    //이현호 테스트 v-html
-    {
-      path: "/crawling",
-      name: "crawling",
-      component: () => import("@/views/TheCrawlingView.vue"),
-    },
     //이현호 테스트 quill 작성 글 보기
     {
       path: "/quillView",
