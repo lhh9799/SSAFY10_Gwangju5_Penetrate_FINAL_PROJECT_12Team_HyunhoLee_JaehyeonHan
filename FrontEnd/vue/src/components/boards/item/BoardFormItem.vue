@@ -73,7 +73,7 @@ function onSubmit() {
 }
 
 function writeArticle() {
-  console.log("글등록하자!!", article.value);
+  // console.log("글등록하자!!", article.value);
   registArticle(
     article.value,
     (response) => {
@@ -87,7 +87,7 @@ function writeArticle() {
 }
 
 function updateArticle() {
-  console.log(article.value.articleNo + "번글 수정하자!!", article.value);
+  // console.log(article.value.articleNo + "번글 수정하자!!", article.value);
   modifyArticle(
     article.value,
     (response) => {
@@ -128,7 +128,9 @@ function moveList() {
       <textarea class="form-control" v-model="article.content" rows="10"></textarea>
     </div>
     <div>
-      <quill :value='article.content'></quill>
+      <quill :articleProps='article'></quill>
+      <!-- <quill :articleProps='article.subject'></quill> -->
+      <!-- <quill :articleProps='article.content'></quill> -->
     </div>
     <div class="col-auto text-center">
       <button type="submit" class="btn btn-outline-primary mb-3" v-if="type === 'regist'">
