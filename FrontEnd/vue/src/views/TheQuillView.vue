@@ -1,16 +1,147 @@
-<template>
-  <QuillEditor toolbar='full' theme="snow" />
-</template>
+<script>
+import hljs from "highlight.js";
+import debounce from "lodash/debounce";
+import { QuillEditor } from '@vueup/vue-quill'
+import { registArticle } from "@/api/board";
+import { ref } from 'vue';
+
+// import theme style
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+
+export default {
+  name: "quill-example-snow",
+  title: "Theme: snow",
+  components: {
+    QuillEditor,
+  },
+  data() {
+    return {
+      editorOption: {
+        placeholder: "본문을 입력하세요.",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"], // <strong>, <em>, <u>, <s>
+            ["blockquote", "code-block"], // <blockquote>, <pre class="ql-syntax" spellcheck="false">
+            [{ header: 1 }, { header: 2 }], // <h1>, <h2>
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ script: "sub" }, { script: "super" }], // <sub>, <sup>
+            [{ indent: "-1" }, { indent: "+1" }], // class제어
+            [{ direction: "rtl" }], //class 제어
+            [{ size: ["small", false, "large", "huge"] }], //class 제어 - html로 되도록 확인
+            [{ header: [1, 2, 3, 4, 5, 6, false] }], // <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, normal
+            [{ font: [] }], // 글꼴 class로 제어
+            [{ color: [] }, { background: [] }], //style="color: rgb(230, 0, 0);", style="background-color: rgb(230, 0, 0);"
+            [{ align: [] }], // class
+            // ["clean"],
+            ["link", "image", "video"],
+          ],
+          syntax: {
+            highlight: (text) => hljs.highlightAuto(text).value,
+          },
+        },
+      },
+      content: "",
+    };
+  },
+  methods: {
+    onEditorChange: debounce(function(value) {
+      this.content = value.html;
+    }, 466),
+    onEditorBlur(editor) {
+      console.log("editor blur!", editor);
+    },
+    onEditorFocus(editor) {
+      console.log("editor focus!", editor);
+    },
+    onEditorReady(editor) {
+      console.log("editor ready!", editor);
+    },
+  },
+  computed: {
+    editor() {
+      return this.$refs.myTextEditor.quill;
+    },
+    contentCode() {
+      return hljs.highlightAuto(this.content).value;
+    },
+  },
+  mounted() {
+    console.log("this is Quill instance:", this.editor);
+  },
+};
+</script>
 
 <script setup>
-//이현호 추가 시작 --[방법 1] quill 지역 설정
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { ref } from 'vue';
 
-// export default {
-//   components: {
-//     QuillEditor
-//   }
-// }
-//이현호 추가 끝
+const myTextEditor = ref();
+
+const article = ref({
+  articleNo: 0,
+  subject: "",
+  content: "",
+  userId: "",
+  userName: "",
+  hit: 0,
+  registerTime: "",
+});
+
+function writeArticle() {
+  //article.value.subject는 양방향 바인딩 되어있음 (별도 할당 불필요)
+  article.value.userId = 'ssafy'
+  article.value.content = myTextEditor.value.editor.outerHTML;
+
+  const deleteTarget1 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">';
+  const deleteTarget2 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL" placeholder="Embed URL">';
+  article.value.content = article.value.content.replaceAll(deleteTarget1, '');
+  article.value.content = article.value.content.replaceAll(deleteTarget2, '');
+
+  console.log('보낼 데이터');
+  console.log(article.value);
+
+  registArticle(
+    article.value,
+    (response) => {
+      let msg = "글등록 처리시 문제 발생했습니다.";
+      if (response.status == 201) msg = "글등록이 완료되었습니다.";
+      alert(msg);
+      moveList();
+    },
+    (error) => console.error(error)
+  );
+}
 </script>
+
+<template>
+  <div class="example">
+    <div class="mb-3">
+      <label for="subject" class="form-label">제목 : </label>
+      <input type="text" class="form-control" v-model="article.subject" placeholder="제목..." />
+    </div>
+    <quill-editor
+      class="editor"
+      ref="myTextEditor"
+      :disabled="false"
+      :value="content"
+      :options="editorOption"
+      @change="onEditorChange"
+      @blur="onEditorBlur($event)"
+      @focus="onEditorFocus($event)"
+      @ready="onEditorReady($event)"
+    />
+
+    <div class="output ql-snow">
+      <div v-html="content"></div>
+    </div>
+
+  <button @click='writeArticle()'>작성하기</button>
+  </div>
+</template>
+
+<style scoped>
+.example {
+  width: 80%;
+  margin: auto;
+}
+</style>

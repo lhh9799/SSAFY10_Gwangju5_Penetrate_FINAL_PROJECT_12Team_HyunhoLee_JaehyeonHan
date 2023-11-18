@@ -1,6 +1,7 @@
 import { localAxios } from "@/util/http-commons";
 
 const local = localAxios(); //axios instance
+import CircularJSON from 'circular-json';
 
 const url = "/board";
 
@@ -15,6 +16,7 @@ function detailArticle(articleno, success, fail) {
 function registArticle(article, success, fail) {
   console.log("boardjs article", article);
   local.post(`${url}`, JSON.stringify(article)).then(success).catch(fail);
+  // local.post(`${url}`, CircularJSON.stringify(article)).then(success).catch(fail);
   listArticle();
 }
 
@@ -23,6 +25,7 @@ function getModifyArticle(articleno, success, fail) {
 }
 
 function modifyArticle(article, success, fail) {
+  //여기도 순환 참조 제거 코드 필요할 수 있음 (writeArticle 소스 참고)
   local.put(`${url}`, JSON.stringify(article)).then(success).catch(fail);
 }
 
