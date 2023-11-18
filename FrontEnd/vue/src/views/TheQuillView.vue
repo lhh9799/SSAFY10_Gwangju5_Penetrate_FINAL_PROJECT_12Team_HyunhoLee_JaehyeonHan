@@ -73,16 +73,9 @@ export default {
 </script>
 
 <script setup>
-// import { ref, defineProps, onMounted } from 'vue';
-// import { ref, defineProps, onMounted, toRaw } from 'vue';
-// import { ref, defineProps, onMounted, toRaw, toRefs } from 'vue';
-import { ref, defineProps, onMounted, toRaw, toRefs, computed } from 'vue';
+import { ref, defineProps, onMounted, computed } from 'vue';
 
 const myTextEditor = ref();
-
-// defineProps({articleProps: String});
-
-// const articleProps = defineProps({articleProps: String});
 const articleProps = defineProps({articleProps: Object});
 
 const article = ref({
@@ -95,89 +88,17 @@ const article = ref({
   registerTime: "",
 });
 
-// myTextEditor.value.root.editor.innerHTML = articleProps.articleProps.content;
-
-// const propContent = ref(articleProps.articleProps.content);
-// console.log('propContent.value 1');
-// console.log(propContent.value);
-
-//GPT
-// const { articleProps } = toRefs(defineProps(['articleProps']));
-// const propContent = ref(articleProps.value.content);
-
-//나
-// const propContent = ref(toRefs(articleProps).value.content);
-// console.log('propContent.value');
-// console.log(propContent.value);
-
-//Bard
-const props = computed(() => articleProps);
-
-function test() {
-  console.log('articleProps.articleProps');
-  console.log(articleProps);
-  console.log(articleProps.articleProps);
-  // document.querySelector("#test").value = articleProps.articleProps.content;
-  // myTextEditor.value.setContents(articleProps.articleProps.content);
-  // document.querySelector(".ql-editor").value = articleProps.articleProps.content;
-  // document.querySelector(".ql-editor").innerHTML = articleProps.articleProps.content;
-  // document.querySelector(".ql-editor").innerHTML = articleProps.articleProps.content + '';
-
+function loadArticle() {
   //Bard
   // Set the editor's contents to the articleProps.content
-  myTextEditor.value.editor.innerHTML = articleProps.articleProps.content;
+  if(articleProps.articleProps.content) {
+    myTextEditor.value.editor.innerHTML = articleProps.articleProps.content;
+  }
 }
 
 onMounted(() => {
-  // document.querySelector(".ql-editor").innerHTML = item.value.content
-  // document.querySelector(".ql-editor").innerHTML = 'hi';
-  // console.log('articleProps');
-  // console.log(articleProps);
-  // console.log(articleProps.articleProps);
-  // console.log(typeof(articleProps));
-  // document.querySelector(".ql-editor").innerHTML = toRaw(articleProps.articleProps);
-  // document.querySelector(".ql-editor").innerHTML = articleProps.articleProps;
-  // console.log(toRaw(articleProps)['articleProps']);
-  // console.log(toRaw(articleProps).articleProps);
-  // console.log(typeof(toRaw(articleProps)));
-  // console.log(typeof(toRaw(articleProps).toString()));
-  // console.log(articleProps.articleProps);
-  // console.log(articleProps["articleProps"]);
-  // console.log(articleProps.content);
-  // console.log(articleProps.data);
-  // document.querySelector(".ql-editor").innerHTML = articleProps;
-  // document.querySelector(".ql-editor").innerHTML = toRaw(articleProps);
-  // document.querySelector(".ql-editor").innerHTML = JSON.stringify(articleProps);
-  // document.querySelector(".ql-editor").innerHTML = articleProps;
-  // document.querySelector(".ql-editor").innerHTML = articleProps;
-  // document.querySelector(".ql-editor").innerHTML = articleProps;
-  // document.querySelector("#test").innerHTML = toRaw(articleProps);
-  // document.querySelector("#test").value = articleProps.articleProps;
-  // document.querySelector("#test").innerHTML = articleProps.articleProps;
-  // document.querySelector("#test").value = toRaw(articleProps);
-  // console.log('JSON.stringify(articleProps)');
-  // console.log(JSON.stringify(articleProps));
-  // console.log(JSON.parse(articleProps));
-  // document.querySelector("#test").value = articleProps.articleProps.content;
-
-  // console.log('articleProps.articleProps.content');
-  // console.log(articleProps.articleProps.content);
-  // myTextEditor.value.editor.innerHTML = articleProps.articleProps.content;
-  // test();
-  // myTextEditor.value.editor.innerHTML = 'hi';
-
-  // console.log('propContent.value 2');
-  // console.log(propContent.value);
-  // myTextEditor.value.editor.innerHTML = propContent.value;
-
-  // console.log('props');
-  // console.log(props);
-  // console.log('props.value');
-  // console.log(props.value);
-  // myTextEditor.value.editor.innerHTML = props.props.value.content;
-  // myTextEditor.value.editor.innerHTML = articleProps.articleProps.content;
-
-  setTimeout(function() { test() }, 100);
+  //Loads original article after 100ms.
+  setTimeout(function() { loadArticle() }, 100);
 }),
 
 function writeArticle() {
@@ -185,6 +106,7 @@ function writeArticle() {
   article.value.userId = 'ssafy'
   article.value.content = myTextEditor.value.editor.outerHTML;
 
+  //Trims unnecessary codes (quill editor)
   const deleteTarget1 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">';
   const deleteTarget2 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL" placeholder="Embed URL">';
   article.value.content = article.value.content.replaceAll(deleteTarget1, '');
@@ -229,9 +151,8 @@ function writeArticle() {
         <div v-html="content"></div>
       </div>
 
+    <!-- TODO: type='regist' 또는 'modify'인지에 따라 작성 또는 수정 api 호출 -->
     <button @click='writeArticle()'>작성하기</button>
-    <button @click='test()'>테스트</button>
-    <input type='text' id='test' />
     </div>
   </div>
 </template>

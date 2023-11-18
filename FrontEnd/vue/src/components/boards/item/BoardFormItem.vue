@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { registArticle, getModifyArticle, modifyArticle } from "@/api/board";
-import quill from '@/views/TheQuillView.vue';
+import quillEditor from '@/views/TheQuillView.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -119,18 +119,16 @@ function moveList() {
         placeholder="작성자ID..."
       />
     </div>
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       <label for="subject" class="form-label">제목 : </label>
       <input type="text" class="form-control" v-model="article.subject" placeholder="제목..." />
-    </div>
-    <div class="mb-3">
+    </div> -->
+    <!-- <div class="mb-3">
       <label for="content" class="form-label">내용 : </label>
       <textarea class="form-control" v-model="article.content" rows="10"></textarea>
-    </div>
+    </div> -->
     <div>
-      <quill :articleProps='article'></quill>
-      <!-- <quill :articleProps='article.subject'></quill> -->
-      <!-- <quill :articleProps='article.content'></quill> -->
+      <quill-editor :articleProps='article'></quill-editor>
     </div>
     <div class="col-auto text-center">
       <button type="submit" class="btn btn-outline-primary mb-3" v-if="type === 'regist'">
