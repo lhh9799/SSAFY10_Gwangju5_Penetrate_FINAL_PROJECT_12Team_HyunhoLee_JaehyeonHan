@@ -94,6 +94,12 @@ const router = createRouter({
       name: "crawling",
       component: () => import("@/views/TheCrawlingView.vue"),
     },
+    //이현호 테스트 quill 작성 글 보기
+    {
+      path: "/quillView",
+      name: "quillView",
+      component: () => import("@/views/TheTestView.vue"),
+    },
   ],
 });
 

@@ -87,6 +87,10 @@ const logout = () => {
           <li class="nav-item">
             <router-link :to="{ name: 'crawling' }" class="nav-link">crawling 테스트</router-link>
           </li>
+          <!-- 이현호 테스트 Vue3-quill 작성 게시글 보기 -->
+          <li class="nav-item">
+            <router-link :to="{ name: 'quillView' }" class="nav-link">quill 작성 글 보기 테스트</router-link>
+          </li>
         </ul>
         <!-- <form class="d-flex" role="search">
           <input
