@@ -82,17 +82,11 @@ const router = createRouter({
       name: "draggable",
       component: () => import("@/views/TheDraggableView.vue"),
     },
-    //이현호 테스트 Vue quill
+    //이현호 테스트 Vue Draggable
     {
-      path: "/quill",
-      name: "quill",
-      component: () => import("@/views/TheQuillView.vue"),
-    },
-    //이현호 테스트 quill 작성 글 보기
-    {
-      path: "/quillView",
-      name: "quillView",
-      component: () => import("@/views/TheTestView.vue"),
+      path: "/map",
+      name: "map",
+      component: () => import("@/views/TheMapView.vue"),
     },
   ],
 });

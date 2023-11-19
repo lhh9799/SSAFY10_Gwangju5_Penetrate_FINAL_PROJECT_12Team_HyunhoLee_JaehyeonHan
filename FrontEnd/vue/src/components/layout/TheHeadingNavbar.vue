@@ -75,20 +75,14 @@ const logout = () => {
           </li>
           <!-- 이현호 테스트 Vue Draggable -->
           <li class="nav-item">
-            <router-link :to="{ name: 'draggable' }" class="nav-link"
-              >Vue 3 Draggable 테스트</router-link
-            >
+            <router-link :to="{ name: 'draggable' }" class="nav-link">Vue 3 Draggable 테스트</router-link>
           </li>
-          <!-- 이현호 테스트 Vue3-quill -->
+          <!-- 이현호 테스트 여행지 정보 -->
           <li class="nav-item">
-            <router-link :to="{ name: 'quill' }" class="nav-link">Vue 3 quill 테스트</router-link>
-          </li>
-          <!-- 이현호 테스트 Vue3-quill 작성 게시글 보기 -->
-          <li class="nav-item">
-            <router-link :to="{ name: 'quillView' }" class="nav-link">quill 작성 글 보기 테스트</router-link>
+            <router-link :to="{ name: 'map' }" class="nav-link">여행지 지도 테스트</router-link>
           </li>
         </ul>
-        <!-- <form class="d-flex" role="search">
+        <form class="d-flex" role="search">
           <input
             class="form-control me-2"
             type="search"
@@ -96,7 +90,7 @@ const logout = () => {
             aria-label="Search"
           />
           <button class="btn btn-outline-success" type="button">search</button>
-        </form> -->
+        </form>
         <ul
           class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll"
           style="--bs-scroll-height: 100px"
