@@ -48,15 +48,15 @@ export default {
     onEditorChange: debounce(function(value) {
       this.content = value.html;
     }, 466),
-    onEditorBlur(editor) {
-      console.log("editor blur!", editor);
-    },
-    onEditorFocus(editor) {
-      console.log("editor focus!", editor);
-    },
-    onEditorReady(editor) {
-      console.log("editor ready!", editor);
-    },
+    // onEditorBlur(editor) {
+    //   console.log("editor blur!", editor);
+    // },
+    // onEditorFocus(editor) {
+    //   console.log("editor focus!", editor);
+    // },
+    // onEditorReady(editor) {
+    //   console.log("editor ready!", editor);
+    // },
   },
   computed: {
     editor() {
@@ -66,13 +66,9 @@ export default {
       return hljs.highlightAuto(this.content).value;
     },
   },
-  mounted() {
-    console.log("this is Quill instance:", this.editor);
-  },
-
-  created() {
-
-  },
+  // mounted() {
+  //   console.log("this is Quill instance:", this.editor);
+  // },
 };
 </script>
 
@@ -211,11 +207,16 @@ watch(
       <div class="output ql-snow">
         <div v-html="content"></div>
       </div>
-
-    <!-- TODO: submitType='regist' 또는 'modify'인지에 따라 작성 또는 수정 api 호출 -->
-    <button @click='submitArticle'>작성하기이이이</button>
-    <!-- <button @click='console.log(article)'>작성하기이이이</button> -->
-    <!-- <button @click='buttonClick()'>작성하기</button> -->
+    </div>
+    <div style='height: 50px;'></div>
+    <div class="col-auto text-center">
+      <button @click='submitArticle' class="btn btn-outline-primary mb-3" v-if="props.submitType === 'regist'">
+        글작성
+      </button>
+      <button @click='submitArticle' class="btn btn-outline-success mb-3" v-else>글수정</button>
+      <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="moveList">
+        목록으로이동...
+      </button>
     </div>
   </div>
 </template>
