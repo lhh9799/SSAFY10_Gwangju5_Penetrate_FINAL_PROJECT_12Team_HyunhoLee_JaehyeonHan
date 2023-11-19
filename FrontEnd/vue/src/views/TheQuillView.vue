@@ -2,8 +2,8 @@
 import hljs from "highlight.js";
 import debounce from "lodash/debounce";
 import { QuillEditor } from '@vueup/vue-quill'
-import { registArticle } from "@/api/board";
-import { ref } from 'vue';
+import { registArticle, modifyArticle } from "@/api/board";
+import { ref, watch } from 'vue';
 
 // import theme style
 import "quill/dist/quill.core.css";
@@ -69,14 +69,28 @@ export default {
   mounted() {
     console.log("this is Quill instance:", this.editor);
   },
+
+  created() {
+
+  },
 };
 </script>
 
 <script setup>
-import { ref, defineProps, onMounted, computed } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
+import { useRoute, useRouter } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
 
 const myTextEditor = ref();
-const articleProps = defineProps({articleProps: Object});
+//대소문자 주의! (잘 안될 때)
+const props = defineProps(
+  {
+    articleProps:Object,
+    submitType: String,
+  },
+);
 
 const article = ref({
   articleNo: 0,
@@ -88,33 +102,21 @@ const article = ref({
   registerTime: "",
 });
 
+function moveList() {
+  router.push({ name: "article-list" });
+}
+
 function loadArticle() {
   //Bard
-  // Set the editor's contents to the articleProps.content
-  if(articleProps.articleProps.content) {
-    myTextEditor.value.editor.innerHTML = articleProps.articleProps.content;
+  // Set the editor's subject and contents from the props.articleProps Object
+  if(props.articleProps.content) {
+    article.value.subject = props.articleProps.subject;
+    myTextEditor.value.editor.innerHTML = props.articleProps.content;
   }
 }
 
-onMounted(() => {
-  //Loads original article after 100ms.
-  setTimeout(function() { loadArticle() }, 100);
-}),
-
 function writeArticle() {
-  //article.value.subject는 양방향 바인딩 되어있음 (별도 할당 불필요)
-  article.value.userId = 'ssafy'
-  article.value.content = myTextEditor.value.editor.outerHTML;
-
-  //Trims unnecessary codes (quill editor)
-  const deleteTarget1 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">';
-  const deleteTarget2 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL" placeholder="Embed URL">';
-  article.value.content = article.value.content.replaceAll(deleteTarget1, '');
-  article.value.content = article.value.content.replaceAll(deleteTarget2, '');
-
-  console.log('보낼 데이터');
-  console.log(article.value);
-
+  // console.log("글등록하자!!", article.value);
   registArticle(
     article.value,
     (response) => {
@@ -126,6 +128,65 @@ function writeArticle() {
     (error) => console.error(error)
   );
 }
+
+function updateArticle() {
+  // console.log(article.value.articleNo + "번글 수정하자!!", article.value);
+  let { articleno } = route.params;
+  article.value.articleNo = articleno;
+
+  modifyArticle(
+    article.value,
+    (response) => {
+      let msg = "글수정 처리시 문제 발생했습니다.";
+      if (response.status == 200) msg = "글정보 수정이 완료되었습니다.";
+      alert(msg);
+      moveList();
+    },
+    (error) => console.log(error)
+  );
+}
+
+const submitArticle = () => {
+  //article.value.subject는 양방향 바인딩 되어있음 (별도 할당 불필요)
+  article.value.userId = 'ssafy'
+  article.value.content = myTextEditor.value.editor.outerHTML;
+
+  //Trims unnecessary codes (quill editor)
+  const deleteTarget1 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">';
+  const deleteTarget2 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL" placeholder="Embed URL">';
+  article.value.content = article.value.content.replaceAll(deleteTarget1, '');
+  article.value.content = article.value.content.replaceAll(deleteTarget2, '');
+
+  props.submitType === "regist" ? writeArticle() : updateArticle();
+};
+
+onMounted(() => {
+  //Loads original article after 100ms.
+  setTimeout(function() { loadArticle() }, 100);
+});
+
+const subjectErrMsg = ref("");
+const contentErrMsg = ref("");
+watch(
+  () => article.value.subject,
+  (value) => {
+    let len = value.length;
+    if (len == 0 || len > 30) {
+      subjectErrMsg.value = "제목을 확인해 주세요!!!";
+    } else subjectErrMsg.value = "";
+  },
+  { immediate: true }
+);
+watch(
+  () => article.value.content,
+  (value) => {
+    let len = value.length;
+    if (len == 0 || len > 500) {
+      contentErrMsg.value = "내용을 확인해 주세요!!!";
+    } else contentErrMsg.value = "";
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -151,8 +212,10 @@ function writeArticle() {
         <div v-html="content"></div>
       </div>
 
-    <!-- TODO: type='regist' 또는 'modify'인지에 따라 작성 또는 수정 api 호출 -->
-    <button @click='writeArticle()'>작성하기</button>
+    <!-- TODO: submitType='regist' 또는 'modify'인지에 따라 작성 또는 수정 api 호출 -->
+    <button @click='submitArticle'>작성하기이이이</button>
+    <!-- <button @click='console.log(article)'>작성하기이이이</button> -->
+    <!-- <button @click='buttonClick()'>작성하기</button> -->
     </div>
   </div>
 </template>

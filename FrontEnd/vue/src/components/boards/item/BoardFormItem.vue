@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
+// import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { registArticle, getModifyArticle, modifyArticle } from "@/api/board";
 import quillEditor from '@/views/TheQuillView.vue';
@@ -37,39 +38,41 @@ if (props.type === "modify") {
   isUseId.value = true;
 }
 
-const subjectErrMsg = ref("");
-const contentErrMsg = ref("");
-watch(
-  () => article.value.subject,
-  (value) => {
-    let len = value.length;
-    if (len == 0 || len > 30) {
-      subjectErrMsg.value = "제목을 확인해 주세요!!!";
-    } else subjectErrMsg.value = "";
-  },
-  { immediate: true }
-);
-watch(
-  () => article.value.content,
-  (value) => {
-    let len = value.length;
-    if (len == 0 || len > 500) {
-      contentErrMsg.value = "내용을 확인해 주세요!!!";
-    } else contentErrMsg.value = "";
-  },
-  { immediate: true }
-);
+// const subjectErrMsg = ref("");
+// const contentErrMsg = ref("");
+// watch(
+//   () => article.value.subject,
+//   (value) => {
+//     let len = value.length;
+//     if (len == 0 || len > 30) {
+//       subjectErrMsg.value = "제목을 확인해 주세요!!!";
+//     } else subjectErrMsg.value = "";
+//   },
+//   { immediate: true }
+// );
+// watch(
+//   () => article.value.content,
+//   (value) => {
+//     let len = value.length;
+//     if (len == 0 || len > 500) {
+//       contentErrMsg.value = "내용을 확인해 주세요!!!";
+//     } else contentErrMsg.value = "";
+//   },
+//   { immediate: true }
+// );
 
 function onSubmit() {
   // event.preventDefault();
 
-  if (subjectErrMsg.value) {
-    alert(subjectErrMsg.value);
-  } else if (contentErrMsg.value) {
-    alert(contentErrMsg.value);
-  } else {
-    props.type === "regist" ? writeArticle() : updateArticle();
-  }
+  // if (subjectErrMsg.value) {
+  //   alert(subjectErrMsg.value);
+  // } else if (contentErrMsg.value) {
+  //   alert(contentErrMsg.value);
+  // } else {
+  //   props.type === "regist" ? writeArticle() : updateArticle();
+  // }
+
+  // props.type === "regist" ? writeArticle() : updateArticle();
 }
 
 function writeArticle() {
@@ -108,6 +111,7 @@ function moveList() {
 </script>
 
 <template>
+  <!-- <form> -->
   <form @submit.prevent="onSubmit">
     <div class="mb-3">
       <label for="userid" class="form-label">작성자 ID : </label>
@@ -128,7 +132,8 @@ function moveList() {
       <textarea class="form-control" v-model="article.content" rows="10"></textarea>
     </div> -->
     <div>
-      <quill-editor :articleProps='article'></quill-editor>
+      <!-- <quill-editor :articleProps='article' :submitType='props.type'></quill-editor> -->
+      <quill-editor :articleProps='article' :submitType='props.type'></quill-editor>
     </div>
     <div class="col-auto text-center">
       <button type="submit" class="btn btn-outline-primary mb-3" v-if="type === 'regist'">
