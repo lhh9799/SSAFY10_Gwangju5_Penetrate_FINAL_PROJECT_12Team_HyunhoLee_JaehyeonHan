@@ -103,11 +103,17 @@ function moveList() {
 }
 
 function loadArticle() {
-  //Bard
-  // Set the editor's subject and contents from the props.articleProps Object
-  if(props.articleProps.content) {
-    article.value.subject = props.articleProps.subject;
+  //modify
+  if (props.articleProps.content) {
+    //Bard - Set the editor's subject and contents from the props.articleProps Object
     myTextEditor.value.editor.innerHTML = props.articleProps.content;
+    article.value.subject = props.articleProps.subject;
+    article.value.userId = props.articleProps.userId;
+  }
+  //write new article
+  else {
+    const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
+    article.value.userId = memberStoreData.userInfo.userId
   }
 }
 
@@ -144,7 +150,7 @@ function updateArticle() {
 
 const submitArticle = () => {
   //article.value.subject는 양방향 바인딩 되어있음 (별도 할당 불필요)
-  article.value.userId = 'ssafy'
+  // article.value.userId = 'ssafy'
   article.value.content = myTextEditor.value.editor.outerHTML;
 
   //Trims unnecessary codes (quill editor)
@@ -187,6 +193,17 @@ watch(
 
 <template>
   <div class="example">
+    <div class="mb-3">
+      <label for="userid" class="form-label">작성자 ID : </label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="article.userId"
+        disabled=""
+        placeholder="작성자ID..."
+        readonly='readonly'
+      />
+    </div>
     <div>
       <div class="mb-3">
         <label for="subject" class="form-label">제목 : </label>
