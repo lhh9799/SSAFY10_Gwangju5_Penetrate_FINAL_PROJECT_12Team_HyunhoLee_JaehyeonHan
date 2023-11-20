@@ -1,38 +1,18 @@
 <script setup>
-import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import { modifyComment, deleteComment } from '@/api/board';
-// defineProps({ comment: Object });
 const props = defineProps({ comment: Object });
 
-const router = useRouter();
-const route = useRoute();
-
-const modifiedComment = ref({
-  articleNo: 0,
-  commentNo: 0,
-  userId: "",
-  content: "",
-  registerTime: "",
-})
+const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
 
 function onModifyComment() {
-  var commentNoElement = document.querySelector('#commentNo');
-  var commentElement = document.querySelector('#comment');
-
-  modifiedComment.value.commentNo = commentNoElement.value;
-  modifiedComment.value.content = commentElement.value; //수정된 댓글 내용
-
   // API 호출
-  modifyComment(modifiedComment.value,
+  modifyComment(props.comment,
     (success) => {
-      console.log('댓글 수정 성공');
-      alert('댓글 수정 성공');
+      alert('댓글이 수정되었습니다.');
       location.reload();
     },
     (error) => {
-      alert('댓글 수정 실패');
-      console.log('댓글 수정 실패');
+      alert('댓글 수정 중 문제가 발생했습니다.');
     }
   )
 }
@@ -41,10 +21,8 @@ function onDeleteComment() {
   // API 호출
   if(confirm('댓글을 삭제하시겠습니까?')) {
     deleteComment(props.comment.commentNo);
-    console.log('댓글 삭제 성공');
     location.reload();
   }
-  
 }
 </script>
 
@@ -79,17 +57,18 @@ function onDeleteComment() {
           </div>
           <div class="divider mb-3"></div>
           <div class="text-secondary">
-            <input type='hidden' id='commentNo' :value='comment.commentNo'>
-            <textarea class='commentEdit' id='comment' name='comment' :value=comment.content></textarea>
+            <textarea class='commentEdit' id='comment' name='comment' v-model='comment.content'></textarea>
           </div>
           <div class="divider mt-3 mb-3"></div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="onModifyComment">
-              댓글수정
-            </button>
-            <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="onDeleteComment">
-              댓글삭제
-            </button>
+            <div v-if='(comment.userId == memberStoreData.userInfo.userId)'>
+              <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="onModifyComment">
+                댓글수정
+              </button>
+              <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="onDeleteComment">
+                댓글삭제
+              </button>
+            </div>
           </div>
         </div>
       </div>

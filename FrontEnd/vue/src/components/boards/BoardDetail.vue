@@ -7,8 +7,8 @@ import CommentWriteItem from "./item/CommentWriteItem.vue";
 
 const route = useRoute();
 const router = useRouter();
+const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
 
-// const articleno = ref(route.params.articleno);
 const { articleno } = route.params;
 
 const article = ref({});
@@ -50,6 +50,10 @@ function moveModify() {
 }
 
 function onDeleteArticle() {
+  if (!confirm('글을 삭제하시겠습니까?')) {
+    return;
+  }
+
   // const { articleno } = route.params;
   // console.log(articleno + "번글 삭제하러 가자!!!");
   // API 호출
@@ -98,10 +102,6 @@ function onDeleteArticle() {
           </div>
           <div class="col-md-4 align-self-center text-end">댓글 : 17</div>
           <div class="divider mb-3"></div>
-          <!-- <div class="text-secondary">
-            {{ article.content }}
-          </div> -->
-          <!-- <div class="text-secondary"> -->
           <div>
             <p v-html='article.content'></p>
           </div>
@@ -110,12 +110,14 @@ function onDeleteArticle() {
             <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
               글목록
             </button>
-            <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
-              글수정
-            </button>
-            <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="onDeleteArticle">
-              글삭제
-            </button>
+            <div v-if='(article.userId == memberStoreData.userInfo.userId)'>
+              <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
+                글수정
+              </button>
+              <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="onDeleteArticle">
+                글삭제
+              </button>
+            </div>
           </div>
         </div>
       </div>

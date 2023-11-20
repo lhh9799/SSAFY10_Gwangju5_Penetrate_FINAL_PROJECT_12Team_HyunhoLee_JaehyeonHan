@@ -24,6 +24,9 @@ function getToday() {
   return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 }
 
+//댓글 작성자를 로그인 아이디로부터 가져옴
+newWrittenComment.value.userId = JSON.parse(localStorage.getItem("memberStore")).userInfo.userId;
+
 watch(
   () => newWrittenComment.value.content,
   (value) => {
@@ -99,9 +102,7 @@ function onSubmit() {
                   src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
                 />
                 <p>
-                  <span class="fw-bold">
-                    <input type='text' v-model='newWrittenComment.userId' placeholder='작성자 아이디' style='width: 16ch;'>
-                  </span> <br />
+                  <span class="fw-bold">{{ newWrittenComment.userId }}</span> <br />
                   <span class="text-secondary fw-light">
                     <!-- {{ comment.registerTime }} -->
                     작성일: {{ today }}
