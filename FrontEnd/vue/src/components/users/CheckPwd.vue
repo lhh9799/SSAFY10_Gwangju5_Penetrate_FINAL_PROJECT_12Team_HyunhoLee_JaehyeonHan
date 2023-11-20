@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 const router = useRouter();
 

@@ -1,19 +1,22 @@
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+const memberStore = useMemberStore();
+
 import Withdraw from "./UserWithdraw.vue";
 import Modify from "./ModifyPwd.vue";
 
-export default {
-  data() {
-    return {
-      showModify: false,
-      showWithdraw: false,
-    };
-  },
-  components: {
-    Withdraw,
-    Modify,
-  },
-};
+const { userInfo } = storeToRefs(memberStore);
+
+const showModify = ref(false);
+const showWithdraw = ref(false);
+
+onMounted(async () => {
+  const { userInfo: userInfoData } = storeToRefs(memberStore);
+  await userInfoData;
+  userInfo.value = userInfoData.value;
+});
 </script>
 
 <template>
@@ -37,9 +40,9 @@ export default {
             <div class="col-md-8">
               <div class="card-body text-start">
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item">SSAFY</li>
-                  <li class="list-group-item">김싸피</li>
-                  <li class="list-group-item">ssafy@ssafy.com</li>
+                  <li class="list-group-item">{{ userInfo.userId }}</li>
+                  <li class="list-group-item">{{ userInfo.userName }}</li>
+                  <li class="list-group-item">{{ userInfo.emailId }}@{{ userInfo.emailDomain }}</li>
                 </ul>
               </div>
             </div>
