@@ -5,13 +5,17 @@ import { listAttraction, getSidoFromSidoTable, getgugunDtoFromSidoTable } from "
 import AttractionKakaoMap from "@/components/common/AttractionKakaoMap.vue";
 import VSelect from "@/components/common/VSelect.vue";
 
+import { attractionType } from "@/util/attraction-type";
+
 // const serviceKey = import.meta.env.VITE_OPEN_API_SERVICE_KEY;
 const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
 
 const sidoList = ref([]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
-const attractionInfoList = ref([]);
+var attractionInfoList = ref([]);
 const selectAttraction = ref({});
+const attractionTypeMap = new Map();
+const selectedAttractionType = ref([]); //checkbox의 선택된 항목들을 저장하는 배열 (예: { key: 12, value: '관광지', })
 
 const param = ref({
     // serviceKey: VITE_OPEN_API_SERVICE_KEY,
@@ -24,7 +28,16 @@ const param = ref({
 onMounted(() => {
     // getChargingStations();
     getSidoList();
+
+    getAttractionTypeMap();
 });
+
+//attractionTypeMap라는 Map 자료구조에 관광지 유형 쌍 대입 (예: { key: 12, value: '관광지', })
+const getAttractionTypeMap = () => {
+    attractionType.forEach((item) => {
+        attractionTypeMap.set(item.key, item.value);
+    });
+};
 
 const getSidoList = () => {
     getSidoFromSidoTable(
@@ -84,12 +97,8 @@ const getAttractionInfoList = () => {
         param.value,
         ({ data }) => {
             console.log('getAttractionInfoList data');
-            console.log(data);
-            // attractionInfoList.value = data.items[0].item;
             attractionInfoList.value = data;
-            // data.forEach((singleElement) => {
-            //     singleElement.contentId
-            // });
+            console.log(attractionInfoList.value);
         },
         (err) => {
             console.log(err);
@@ -99,6 +108,26 @@ const getAttractionInfoList = () => {
 
 const viewAttractionInfoList = (attraction) => {
     selectAttraction.value = attraction;
+};
+
+const onChangeCheckbox = () => {
+    var filteredAttractionInfoList = [];
+
+    if (attractionInfoList.value.length == 0) {
+        //여행지 정보가 없으므로 리턴 (attractionInfoList.value.length == 0)
+        return;
+    }
+
+    attractionInfoList.value.forEach((item) => {
+        selectedAttractionType.value.forEach((checked) => {
+
+            if (item.contentTypeId == checked) {
+                filteredAttractionInfoList.push(item);
+            }
+        });
+    });
+
+    attractionInfoList.value = filteredAttractionInfoList;
 };
 </script>
 
@@ -113,34 +142,57 @@ const viewAttractionInfoList = (attraction) => {
                 <VSelect :selectOption="gugunList" @onKeySelect="onChangeGugun" />
             </div>
         </div>
-        <AttractionKakaoMap :attractionInfoList='attractionInfoList' :selectAttraction='selectAttraction' />
-        <table class="table table-hover">
-            <thead>
-                <tr class="text-center">
-                    <th scope="col">이미지</th>
-                    <th scope="col">관광지 유형</th>
-                    <th scope="col">관광지 명</th>
-                    <th scope="col">시/도</th>
-                    <th scope="col">구/군</th>
-                    <th scope="col">주소</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId" @click="viewAttractionInfoList(attractionInfo)">
-                    <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
-                    <td>{{ attractionInfo.contentTypeId }}</td>
-                    <td>{{ attractionInfo.title }}</td>
-                    <td>{{ attractionInfo.sidoCode }}</td>
-                    <td>{{ attractionInfo.gugunCode }}</td>
-                    <td>{{ attractionInfo.addr1 }}</td>
-                </tr>
-            </tbody>
-        </table>
+
+        <!-- 관광지 유형 옵션 (checkbox) -->
+        <!-- 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점 -->
+        <div id='attraction-options-div' >
+            <template v-for='item in attractionType'>
+                <input type='checkbox' :value='item.key' :id='item.value' class='attraction-options' @change='onChangeCheckbox' v-model='selectedAttractionType'>
+                <label :for='item.value' class='attraction-options'>{{ item.value }}</label>
+            </template>
+        </div>
+
+        <div>
+            <AttractionKakaoMap :attractionInfoList='attractionInfoList' :selectAttraction='selectAttraction' />
+            <table class="table table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th scope="col">이미지</th>
+                        <th scope="col">관광지 유형</th>
+                        <th scope="col">관광지 명</th>
+                        <th scope="col">시/도</th>
+                        <th scope="col">구/군</th>
+                        <th scope="col">주소</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId" @click="viewAttractionInfoList(attractionInfo)">
+                        <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
+                        <td>{{ attractionInfo.contentTypeId }}</td>
+                        <td>{{ attractionInfo.title }}</td>
+                        <td>{{ attractionInfo.sidoCode }}</td>
+                        <td>{{ attractionInfo.gugunCode }}</td>
+                        <td>{{ attractionInfo.addr1 }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
 <style>
 mark.purple {
     background: linear-gradient(to top, #c354ff 20%, transparent 30%);
+}
+
+.attraction-options-div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.attraction-options {
+    /* width: 500px; */
+    zoom: 1.5;
+    padding-right: 3%;
 }
 </style>
