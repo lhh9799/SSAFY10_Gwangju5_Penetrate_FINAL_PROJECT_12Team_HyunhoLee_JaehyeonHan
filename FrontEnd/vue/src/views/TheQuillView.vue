@@ -198,10 +198,6 @@ watch(
         :disabled="false"
         :value="content"
         :options="editorOption"
-        @change="onEditorChange"
-        @blur="onEditorBlur($event)"
-        @focus="onEditorFocus($event)"
-        @ready="onEditorReady($event)"
       />
 
       <div class="output ql-snow">
