@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.vue.member.model.MemberDto;
+import com.ssafy.vue.member.model.NewPwdDto;
 
 @Mapper
 public interface MemberMapper {
@@ -19,4 +20,8 @@ public interface MemberMapper {
 	void join(MemberDto memberDto) throws SQLException;
 	//한재현 추가
 	void delete(String userId) throws SQLException;
+	//한재현 추가
+	String getPwdFromId(String userId) throws SQLException;
+	//한재현 추가
+	void updatePwd(NewPwdDto newPwd) throws SQLException;
 }

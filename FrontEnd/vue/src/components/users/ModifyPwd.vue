@@ -6,14 +6,17 @@ import { useRouter } from "vue-router";
 const memberStore = useMemberStore();
 const router = useRouter();
 
+const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
+
 const { userModifyPwd } = memberStore;
 const modifyPwd = ref({
-  userPwd: "",
+  userId: "",
   newUserPwd: "",
   newUserPwdCheck: "",
 });
 
 async function onSubmit() {
+  modifyPwd.value.userId = memberStoreData.userInfo.userId;
   if (modifyPwd.value.newUserPwd != modifyPwd.value.newUserPwdCheck) {
     console.log("비밀번호 일치확인 걸림");
     alert("비밀번호와 비밀번호 확인을 확인해주세요!");

@@ -10,6 +10,7 @@ import {
   logout,
   join,
   withdraw,
+  check,
   modifyPassword,
 } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
@@ -174,14 +175,37 @@ export const useMemberStore = defineStore("memberStore", () => {
     );
   };
 
+  const checkPwd = async (userInput) => {
+    await check(
+      userInput,
+      (response) => {
+        if (response.status === httpStatusCode.CREATE) {
+          console.log("비밀번호가 일치함");
+          alert("비밀번호 일치");
+          router.push({ name: "user-mypage" });
+        } else {
+          console.log("response.status");
+          console.log(response.status);
+          alert("비밀번호가 다릅니다.");
+          router.replace({ name: "check" });
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
   const userModifyPwd = async (modifyPwd) => {
     await modifyPassword(
       modifyPwd,
       (response) => {
         if (response.status === httpStatusCode.OK) {
-          console.log("유저 탈퇴 완료!!!");
+          console.log("비밀번호 변경 완료!!!");
+          alert("비밀번호 변경 완료!!!");
         } else {
-          console.error("유저 정보 없음!!!!");
+          console.error("비밀번호 변경 중 문제 발생!!!");
+          alert("비밀번호 변경 중 문제 발생!!!");
         }
       },
       (error) => {
@@ -201,6 +225,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     userLogout,
     userJoin,
     userWithdraw,
+    checkPwd,
     userModifyPwd,
   };
   // {

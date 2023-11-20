@@ -13,6 +13,11 @@
 		<result column="join_date" property="joinDate"/>
 		<result column="token" property="refreshToken"/>
 	</resultMap>
+	
+	<resultMap type="NewPwdDto" id="NewPwd">
+		<result column="user_id" property="userId"/>
+		<result column="user_password" property="newUserPwd"/>
+	</resultMap>
 
 	<select id="login" parameterType="map" resultMap="member">
 		select user_id, user_name, token
@@ -55,5 +60,19 @@
 		DELETE FROM members
 		WHERE user_id = #{userId}
 	</delete>
+	
+	<!-- 한재현 추가 -->
+	<select id="getPwdFromId" parameterType="string" resultType="string">
+		select user_password
+		from members
+		where user_id = #{userId}
+	</select>
+	
+	<!-- 한재현 추가 -->
+	<update id="updatePwd" parameterType="NewPwdDto">
+		UPDATE members
+		SET user_password = #{newUserPwd}
+		WHERE user_id = #{userId}
+	</update>
 	
 </mapper>

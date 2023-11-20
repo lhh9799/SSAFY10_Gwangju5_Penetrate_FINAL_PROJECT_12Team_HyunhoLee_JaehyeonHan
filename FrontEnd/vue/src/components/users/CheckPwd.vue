@@ -1,8 +1,29 @@
 <script setup>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-async function onSubmit() {}
+import { useMemberStore } from "@/stores/member";
+const memberStore = useMemberStore();
+const { checkPwd } = memberStore;
+
+const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
+
+const IdAndPwd = ref({
+  userId: "",
+  userPwd: "",
+});
+
+async function onSubmit() {
+  IdAndPwd.value.userId = memberStoreData.userInfo.userId;
+  console.log(IdAndPwd.value);
+  if (IdAndPwd.value.userId == "" || IdAndPwd.value.userPwd == "") {
+    alert("비밀번호를 입력해주세요");
+  } else {
+    await checkPwd(JSON.stringify(IdAndPwd.value));
+  }
+}
+
 async function onCancel() {
   router.replace("/");
 }
@@ -29,6 +50,7 @@ async function onCancel() {
                   name="UserPwd"
                   class="form-control"
                   placeholder="비밀번호를 입력해주세요."
+                  v-model="IdAndPwd.userPwd"
                   required
                 />
               </div>

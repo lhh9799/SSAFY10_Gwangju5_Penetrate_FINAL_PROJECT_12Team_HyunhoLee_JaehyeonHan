@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.vue.member.model.MemberDto;
+import com.ssafy.vue.member.model.NewPwdDto;
 import com.ssafy.vue.member.model.mapper.MemberMapper;
 
 @Service
@@ -59,6 +60,16 @@ public class MemberServiceImpl implements MemberService {
 	public void delete(String userId) throws SQLException {
 		memberMapper.delete(userId);
 		System.out.println("userID = " + userId);
+	}
+
+	@Override
+	public String getPwdFromId(String userId) throws SQLException {
+		return memberMapper.getPwdFromId(userId);
+	}
+
+	@Override
+	public void updatePwd(NewPwdDto newPwd) throws SQLException {
+		memberMapper.updatePwd(newPwd);
 	}
 
 }

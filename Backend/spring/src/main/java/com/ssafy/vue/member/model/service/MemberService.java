@@ -3,6 +3,7 @@ package com.ssafy.vue.member.model.service;
 import java.sql.SQLException;
 
 import com.ssafy.vue.member.model.MemberDto;
+import com.ssafy.vue.member.model.NewPwdDto;
 
 public interface MemberService {
 
@@ -15,4 +16,8 @@ public interface MemberService {
 	void join(MemberDto memberDto) throws SQLException;
 	//한재현 추가
 	void delete(String userId) throws SQLException;
+	//한재현 추가
+	String getPwdFromId(String userId) throws SQLException;
+	//한재현 추가
+	void updatePwd(NewPwdDto newPwd) throws SQLException;
 }
