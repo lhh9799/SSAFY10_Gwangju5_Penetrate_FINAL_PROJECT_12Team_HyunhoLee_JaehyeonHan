@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getModifyArticle } from "@/api/board";
 import quillEditor from '@/views/TheQuillView.vue';
@@ -48,16 +48,6 @@ function moveList() {
 <template>
   <!-- <form> -->
   <form @submit.prevent="onSubmit">
-    <div class="mb-3">
-      <label for="userid" class="form-label">작성자 ID : </label>
-      <input
-        type="text"
-        class="form-control"
-        v-model="article.userId"
-        :disabled="isUseId"
-        placeholder="작성자ID..."
-      />
-    </div>
     <div>
       <quill-editor :articleProps='article' :submitType='props.type'></quill-editor>
     </div>
