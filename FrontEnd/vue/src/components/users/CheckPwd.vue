@@ -1,14 +1,11 @@
 <script setup>
 import { ref } from "vue";
-import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
 import { useMemberStore } from "@/stores/member";
 const memberStore = useMemberStore();
 const { checkPwd } = memberStore;
-
-const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
 
 const IdAndPwd = ref({
   userId: "",

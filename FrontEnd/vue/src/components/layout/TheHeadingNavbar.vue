@@ -45,10 +45,7 @@ const logout = () => {
             <a class="nav-link" href="#">마이캠퍼스</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">강의실</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">커뮤니티</a>
+            <router-link :to="{ name: 'playground' }" class="nav-link">놀이터</router-link>
           </li>
           <li class="nav-item dropdown">
             <a
@@ -75,7 +72,9 @@ const logout = () => {
           </li>
           <!-- 이현호 테스트 Vue Draggable -->
           <li class="nav-item">
-            <router-link :to="{ name: 'draggable' }" class="nav-link">Vue 3 Draggable 테스트</router-link>
+            <router-link :to="{ name: 'draggable' }" class="nav-link"
+              >Vue 3 Draggable 테스트</router-link
+            >
           </li>
           <!-- 이현호 테스트 여행지 정보 -->
           <li class="nav-item">

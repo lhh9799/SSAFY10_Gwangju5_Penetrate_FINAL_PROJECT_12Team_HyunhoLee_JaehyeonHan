@@ -67,6 +67,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/playground",
+      name: "playground",
+      component: () => import("@/views/ThePlayGroundView.vue"),
+    },
+    {
       path: "/estations",
       name: "estations",
       component: TheElectricChargingStationView,
