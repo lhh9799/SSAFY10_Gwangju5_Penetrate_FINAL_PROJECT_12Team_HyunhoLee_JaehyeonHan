@@ -6,16 +6,18 @@ import AttractionKakaoMap from "@/components/common/AttractionKakaoMap.vue";
 import VSelect from "@/components/common/VSelect.vue";
 
 import { attractionType } from "@/util/attraction-type";
+import { check } from '@/api/user';
 
 // const serviceKey = import.meta.env.VITE_OPEN_API_SERVICE_KEY;
 const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
 
 const sidoList = ref([]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
-var attractionInfoList = ref([]);
-const selectAttraction = ref({});
-const attractionTypeMap = new Map();
-const selectedAttractionType = ref([]); //checkbox의 선택된 항목들을 저장하는 배열 (예: { key: 12, value: '관광지', })
+var entireAttractionInfoList = ref([]);     //VSelect에서 선택한 지역의 전체 관광지 정보
+var attractionInfoList = ref([]);           //관광지 유형 조건에 맞는 관광지 정보
+const selectAttraction = ref({});           //테이블에서 선택한 관광지 1개의 정보
+const attractionTypeMap = new Map();        //관광지 유형 코드로 문자열을 얻어오기 위한 Map
+const selectedAttractionType = ref([]);     //checkbox의 선택된 항목들을 저장하는 배열 (예: { key: 12, value: '관광지', })
 
 const param = ref({
     // serviceKey: VITE_OPEN_API_SERVICE_KEY,
@@ -26,9 +28,7 @@ const param = ref({
 });
 
 onMounted(() => {
-    // getChargingStations();
     getSidoList();
-
     getAttractionTypeMap();
 });
 
@@ -42,9 +42,6 @@ const getAttractionTypeMap = () => {
 const getSidoList = () => {
     getSidoFromSidoTable(
         ({ data }) => {
-            console.log('getSidoList data');
-            console.log(data);
-
             let options = [];
             options.push({ text: "시도선택", value: "" });
             data.forEach((sido) => {
@@ -59,15 +56,11 @@ const getSidoList = () => {
 };
 
 const onChangeSido = (val) => {
-    console.log('onChangeSido:' + val);
     param.value.sidoCode = val;
 
     getgugunDtoFromSidoTable(
         { sido: val },
         ({ data }) => {
-            console.log('onChangeSido data');
-            console.log(data);
-
             let options = [];
             options.push({ text: "구군선택", value: "" });
             data.forEach((gugun) => {
@@ -82,23 +75,24 @@ const onChangeSido = (val) => {
 };
 
 const onChangeGugun = (val) => {
-    console.log('onChangeGugun:' + val);
+    //관광지 정보 쿼리를 위한 객체에 선택한 구/군 코드 저장
     param.value.gugunCode = val;
 
-    param.value.zscode = val;
+    //지역 별 1회 실행 (선택한 지역의 전체 관광지 조회)
     getAttractionInfoList();
+
+    //조건에 맞는 관광지 로드
+    // queryAttractions();
+    selectAllAttractionType();
 };
 
+//선택한 지역의 전체 관광지 조회
 const getAttractionInfoList = () => {
-    console.log('param.value');
-    console.log(param.value);
-
     listAttraction(
         param.value,
         ({ data }) => {
-            console.log('getAttractionInfoList data');
+            entireAttractionInfoList.value = data;
             attractionInfoList.value = data;
-            console.log(attractionInfoList.value);
         },
         (err) => {
             console.log(err);
@@ -110,17 +104,20 @@ const viewAttractionInfoList = (attraction) => {
     selectAttraction.value = attraction;
 };
 
-const onChangeCheckbox = () => {
-    var filteredAttractionInfoList = [];
-
+//선택한 지역의 관광지 중 선택한 체크박스에 부합하는 관광지 리스트 출력
+//TODO: 체크박스에 부합하는 관광지가 없는 경우 지도 출력되지 않는 문제 있음 (null 체크) -> 지도 원래 위치 넣기!
+const queryAttractions = () => {
+    //관광지 유형 모두 체크 해제된 상태 -> 선택된 지역의 모든 관광지 출력
     if (attractionInfoList.value.length == 0) {
-        //여행지 정보가 없으므로 리턴 (attractionInfoList.value.length == 0)
+        attractionInfoList.value = entireAttractionInfoList;
+
         return;
     }
 
-    attractionInfoList.value.forEach((item) => {
-        selectedAttractionType.value.forEach((checked) => {
+    var filteredAttractionInfoList = [];
 
+    entireAttractionInfoList.value.forEach((item) => {
+        selectedAttractionType.value.forEach((checked) => {
             if (item.contentTypeId == checked) {
                 filteredAttractionInfoList.push(item);
             }
@@ -128,6 +125,68 @@ const onChangeCheckbox = () => {
     });
 
     attractionInfoList.value = filteredAttractionInfoList;
+};
+
+const onChangeCheckbox = () => {
+    //전체 관광지 리스트가 비어있거나 조건에 맞는 관광지(해당 지역의 관광지 유형 (예: 서울 강서구 여행코스))가 없는 경우 알림창 출력 후 리턴
+    if(entireAttractionInfoList.value.length == 0 || attractionInfoList.value.length == 0) {
+        if(param.value.sidoCode == 0) {
+            alert('시/도를 선택해주시기 바랍니다.');
+            selectedAttractionType.value = [];
+
+            return;
+        }
+
+        else if(param.value.gugunCode == 0) {
+            alert('구/군을 선택해주시기 바랍니다.');
+            selectedAttractionType.value = [];
+
+            return;
+        }
+
+        alert('해당 지역에 관광지 정보가 없습니다.');
+
+        return;
+    }
+
+    if (selectedAttractionType.value.length == 0) {
+        attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
+
+        return;
+    }
+
+    //조건에 맞는 관광지 출력
+    queryAttractions();
+};
+
+const selectAllAttractionType = () => {
+    if(param.value.sidoCode == 0) {
+        alert('시/도를 선택해주시기 바랍니다.');
+
+        return;
+
+    } else if(param.value.gugunCode == 0) {
+        alert('구/군을 선택해주시기 바랍니다.');
+
+        return;
+    }
+
+    //checkbox 초기화 - 모두 선택
+    selectedAttractionType.value = [];
+    attractionType.forEach((item) => {
+        selectedAttractionType.value.push(item.key);
+    });
+
+    //조건에 맞는 관광지 로드 (전체)
+    attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
+};
+
+const deselectAllAttractionType = () => {
+    //checkbox 초기화 - 모두 선택 해제
+    selectedAttractionType.value = [];
+
+    //조건에 맞는 관광지 로드 (0개 관광지 로드)
+    attractionInfoList.value = [];
 };
 </script>
 
@@ -142,6 +201,9 @@ const onChangeCheckbox = () => {
                 <VSelect :selectOption="gugunList" @onKeySelect="onChangeGugun" />
             </div>
         </div>
+        <div class="col d-flex flex-row-reverse">
+                
+        </div>
 
         <!-- 관광지 유형 옵션 (checkbox) -->
         <!-- 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점 -->
@@ -150,6 +212,12 @@ const onChangeCheckbox = () => {
                 <input type='checkbox' :value='item.key' :id='item.value' class='attraction-options' @change='onChangeCheckbox' v-model='selectedAttractionType'>
                 <label :for='item.value' class='attraction-options'>{{ item.value }}</label>
             </template>
+
+            <!-- 전체 선택, 전채 선택 해제 버튼 -->
+            <div class='checkbox-buttons'>
+                <button class="btn btn-outline-success" type="button" id='deselect-all' @click='selectAllAttractionType'>전체 선택</button>
+                <button class="btn btn-outline-primary" type="button" id='deselect-all' @click='deselectAllAttractionType'>전체 선택 해제</button>
+            </div>
         </div>
 
         <div>
@@ -166,7 +234,9 @@ const onChangeCheckbox = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId" @click="viewAttractionInfoList(attractionInfo)">
+                    <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId" @click="viewAttractionInfoList(attractionInfo)"> -->
+                    <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId"> -->
+                    <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType" @click="viewAttractionInfoList(attractionInfo)">
                         <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
                         <td>{{ attractionInfo.contentTypeId }}</td>
                         <td>{{ attractionInfo.title }}</td>
@@ -192,7 +262,17 @@ mark.purple {
 
 .attraction-options {
     /* width: 500px; */
-    zoom: 1.5;
+    zoom: 1.2;
     padding-right: 3%;
+}
+
+.checkbox-buttons {
+    display: flex;
+    /* justify-items: center; */
+    /* justify-content: center; */
+    justify-content: end;
+    vertical-align: middle;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 </style>
