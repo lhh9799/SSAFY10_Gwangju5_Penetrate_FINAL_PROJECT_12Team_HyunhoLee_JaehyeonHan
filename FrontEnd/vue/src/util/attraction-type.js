@@ -10,3 +10,21 @@ export const attractionType = [
   { key: 38, value: '쇼핑', },
   { key: 39, value: '음식점', },
 ];
+
+export const defaultMapLocation = {
+  "contentId": 0,
+  "contentTypeId": 12,
+  "title": "카카오 스페이스닷원",
+  "addr1": "제주특별자치도 제주시 첨단로 242",
+  "addr2": "",
+  "zipcode": "63309",
+  "tel": "",
+  "firstImage": "https://api.cdn.visitjeju.net/photomng/imgpath/201812/19/a1056453-2576-4cca-bf62-d2649b5c2077.JPG",
+  "firstImage2": "",
+  "readcount": 0,
+  "sidoCode": 39,
+  "gugunCode": 0,
+  "latitude": 33.450701,
+  "longitude": 126.570667,
+  "mlevel": "0"
+}

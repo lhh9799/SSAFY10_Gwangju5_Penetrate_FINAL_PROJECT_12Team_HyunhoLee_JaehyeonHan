@@ -5,8 +5,7 @@ import { listAttraction, getSidoFromSidoTable, getgugunDtoFromSidoTable } from "
 import AttractionKakaoMap from "@/components/common/AttractionKakaoMap.vue";
 import VSelect from "@/components/common/VSelect.vue";
 
-import { attractionType } from "@/util/attraction-type";
-import { check } from '@/api/user';
+import { attractionType, defaultMapLocation } from "@/util/attraction-type";
 
 // const serviceKey = import.meta.env.VITE_OPEN_API_SERVICE_KEY;
 const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
@@ -187,6 +186,7 @@ const deselectAllAttractionType = () => {
 
     //조건에 맞는 관광지 로드 (0개 관광지 로드)
     attractionInfoList.value = [];
+    attractionInfoList.value.push(defaultMapLocation);
 };
 </script>
 
