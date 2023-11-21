@@ -69,6 +69,7 @@ public class BoardController {
 			BoardListDto boardListDto = boardService.listArticle(map);
 			HttpHeaders header = new HttpHeaders();
 			header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+			System.out.println("BoardController boardListDto: " + boardListDto);
 			return ResponseEntity.ok().headers(header).body(boardListDto);
 		} catch (Exception e) {
 			return exceptionHandling(e);
