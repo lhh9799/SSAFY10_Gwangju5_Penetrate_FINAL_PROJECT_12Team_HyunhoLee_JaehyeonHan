@@ -99,11 +99,6 @@ const deleteMarkers = () => {
     markers.value.forEach((marker) => marker.setMap(null));
   }
 };
-
-//이현호 추가
-const panTo = (latitude, longitude) => {
-  map.panTo(latitude, longitude)
-}
 </script>
 
 <template>

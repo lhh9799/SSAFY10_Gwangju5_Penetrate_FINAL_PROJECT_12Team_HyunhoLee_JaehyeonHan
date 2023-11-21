@@ -3,9 +3,10 @@ import { ref, onMounted } from "vue";
 import { listAttraction, getSidoFromSidoTable, getgugunDtoFromSidoTable } from "@/api/map";
 
 import AttractionKakaoMap from "@/components/common/AttractionKakaoMap.vue";
+import TheItineraryView from "@/components/itinerary/TheItineraryView.vue";
 import VSelect from "@/components/common/VSelect.vue";
 
-import { attractionType, defaultMapLocation } from "@/util/attraction-type";
+import { attractionType, sidoType, defaultMapLocation } from "@/util/attraction-type";
 
 // const serviceKey = import.meta.env.VITE_OPEN_API_SERVICE_KEY;
 const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
@@ -16,6 +17,7 @@ var entireAttractionInfoList = ref([]);     //VSelect에서 선택한 지역의 
 var attractionInfoList = ref([]);           //관광지 유형 조건에 맞는 관광지 정보
 const selectAttraction = ref({});           //테이블에서 선택한 관광지 1개의 정보
 const attractionTypeMap = new Map();        //관광지 유형 코드로 문자열을 얻어오기 위한 Map
+const sidoTypeMap = new Map();              //시/도 코드로 해당 지역 문자열을 얻어오기 위한 Map
 const selectedAttractionType = ref([]);     //checkbox의 선택된 항목들을 저장하는 배열 (예: { key: 12, value: '관광지', })
 
 const param = ref({
@@ -28,14 +30,20 @@ const param = ref({
 
 onMounted(() => {
     getSidoList();
-    getAttractionTypeMap();
+    initDataMap();
 });
 
-//attractionTypeMap라는 Map 자료구조에 관광지 유형 쌍 대입 (예: { key: 12, value: '관광지', })
-const getAttractionTypeMap = () => {
+//Map 자료구조에 값 대입
+const initDataMap = () => {
+    //attractionTypeMap라는 Map 자료구조에 관광지 유형 쌍 대입 (예: { key: 12, value: '관광지', })
     attractionType.forEach((item) => {
         attractionTypeMap.set(item.key, item.value);
     });
+
+    //시/도 코드와 해당 지역 문자열 쌍 대입 (예: { key: 1, value: '서울' })
+    sidoType.forEach((item) => {
+        sidoTypeMap.set(item.key, item.value);
+    })
 };
 
 const getSidoList = () => {
@@ -108,7 +116,8 @@ const viewAttractionInfoList = (attraction) => {
 const queryAttractions = () => {
     //관광지 유형 모두 체크 해제된 상태 -> 선택된 지역의 모든 관광지 출력
     if (attractionInfoList.value.length == 0) {
-        attractionInfoList.value = entireAttractionInfoList;
+        // attractionInfoList.value = entireAttractionInfoList;
+        attractionInfoList.value = defaultMapLocation;
 
         return;
     }
@@ -143,13 +152,15 @@ const onChangeCheckbox = () => {
             return;
         }
 
+        attractionInfoList.value = defaultMapLocation;
         alert('해당 지역에 관광지 정보가 없습니다.');
 
         return;
     }
 
     if (selectedAttractionType.value.length == 0) {
-        attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
+        // attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
+        attractionInfoList.value = defaultMapLocation;
 
         return;
     }
@@ -229,24 +240,27 @@ const deselectAllAttractionType = () => {
                         <th scope="col">관광지 유형</th>
                         <th scope="col">관광지 명</th>
                         <th scope="col">시/도</th>
-                        <th scope="col">구/군</th>
+                        <!-- <th scope="col">구/군</th> -->
                         <th scope="col">주소</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId" @click="viewAttractionInfoList(attractionInfo)"> -->
-                    <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId"> -->
                     <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType" @click="viewAttractionInfoList(attractionInfo)">
                         <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
-                        <td>{{ attractionInfo.contentTypeId }}</td>
+                        <td>{{ attractionTypeMap.get(attractionInfo.contentTypeId) }}</td>
                         <td>{{ attractionInfo.title }}</td>
-                        <td>{{ attractionInfo.sidoCode }}</td>
-                        <td>{{ attractionInfo.gugunCode }}</td>
+                        <td>{{ sidoTypeMap.get(attractionInfo.sidoCode) }}</td>
+                        <!-- <td>{{ attractionInfo.gugunCode }}</td> -->
                         <td>{{ attractionInfo.addr1 }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+    </div>
+    <div>
+        <TheItineraryView></TheItineraryView>
+        TheItineraryView.vue
+        <h1>내비바</h1>
     </div>
 </template>
 
