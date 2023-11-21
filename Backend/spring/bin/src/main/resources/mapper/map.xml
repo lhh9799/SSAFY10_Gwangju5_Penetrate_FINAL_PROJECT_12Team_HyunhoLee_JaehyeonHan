@@ -4,6 +4,40 @@
 
 <mapper namespace="com.ssafy.vue.map.model.mapper.MapMapper">
 
+	<!-- 이현호 추가 -->
+	<resultMap type="com.ssafy.vue.map.model.SidoDtoFromSidoTable" id="sidoDtoFromSidoTable">
+		<result property="sidoCode" column="sido_code" />
+		<result property="sidoName" column="sido_name" />
+		<!-- <result property="sido_code" column="sidoCode" />
+		<result property="sido_name" column="sidoName" /> -->
+	</resultMap>
+	
+	<!-- 이현호 추가 -->
+	<resultMap type="com.ssafy.vue.map.model.GugunDtoFromSidoTable" id="gugunDtoFromSidoTable">
+		<result property="gugunCode" column="gugun_code" />
+		<result property="gugunName" column="gugun_name" />
+		<result property="sidoCode" column="sido_code" />
+	</resultMap>
+	
+	<!-- 이현호 추가 -->
+	<resultMap type="com.ssafy.vue.map.model.AttractionInfoDto" id="attractionInfoDto">
+		<result property="contentId" column="content_id" />
+		<result property="contentTypeId" column="content_type_id" />
+		<result property="title" column="title" />
+		<result property="addr1" column="addr1" />
+		<result property="addr2" column="addr2" />
+		<result property="zipcode" column="zipcode" />
+		<result property="tel" column="tel" />
+		<result property="firstImage" column="first_image" />
+		<result property="firstImage2" column="first_image2" />
+		<result property="readcount" column="readcount" />
+		<result property="sidoCode" column="sido_code" />
+		<result property="gugunCode" column="gugun_code" />
+		<result property="latitude" column="latitude" />
+		<result property="longitude" column="longitude" />
+		<result property="mlevel" column="mlevel" />
+	</resultMap>
+
 	<select id="getSido" resultType="sidoGugunCodeDto">
 		select left(sidoCode,2) sidoCode, sidoName
 		from sidocode
@@ -15,6 +49,35 @@
 		from guguncode
 		where left(gugunCode,2) = #{sido}
 		order by gugunCode
+	</select>
+	
+	<!-- 이현호 추가 -->
+	<select id="getAttraction" parameterType="int" resultType="attractionInfoDto">
+		SELECT content_id AS contentId, content_type_id AS contentTypeId, title AS title,
+		addr1 AS addr1, addr2 AS addr2, zipcode AS zipcode, tel AS tel, first_image AS firstImage,
+		first_image2 AS firstImage2, readcount AS readcount, sido_code AS sidoCode,
+		gugun_code AS gugunCode, latitude AS latitude, longitude AS longitude, mlevel AS mlevel
+		FROM attraction_info
+		WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode}
+		<!-- <if test="contentTypeId != null">
+			AND contentTypeId = #{contentTypeId}
+		</if> -->
+		ORDER BY gugun_code
+	</select>
+	
+	<!-- 이현호 추가 -->
+	<select id="getSidoFromSidoTable" resultType="sidoDtoFromSidoTable">
+		SELECT sido_code AS sidoCode, sido_name AS sidoName
+		FROM sido
+		ORDER BY sido_code
+	</select>
+	
+	<!-- 이현호 추가 -->
+	<select id="getGugunFromGugunTable" parameterType = "int" resultType="gugunDtoFromSidoTable">
+		SELECT gugun_code AS gugunCode, gugun_name AS gugunName, sido_code AS sidoCode
+		FROM gugun
+		WHERE sido_code = #{sidoCode}
+		ORDER BY gugun_code;
 	</select>
 	
 </mapper>

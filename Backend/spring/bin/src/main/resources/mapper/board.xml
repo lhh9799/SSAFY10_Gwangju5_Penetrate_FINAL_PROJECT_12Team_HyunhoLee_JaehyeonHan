@@ -12,6 +12,7 @@
 		<result column="content" property="content"/>
 		<result column="hit" property="hit"/>
 		<result column="register_time" property="registerTime"/>
+		<result column="commentsCount" property="commentsCount"/>
 	</resultMap>
 	
 	<resultMap type="boardDto" id="viewArticle" extends="article">
@@ -61,9 +62,14 @@
 	</sql>
 
 	<select id="listArticle" parameterType="map" resultMap="article">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name
-		from board b, members m 
-		where b.user_id = m.user_id
+		<!-- 이현호 수정 -->
+		<!-- select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name, ifnull(c.cnt, 0) as commentsCount -->
+		select b.article_no, b.user_id, b.subject, b.hit, b.register_time, m.user_name, ifnull(c.cnt, 0) as commentsCount
+		from board b join members m 
+		on b.user_id = m.user_id
+		left outer join (select article_no, count(*) cnt from comment group by article_no) c
+		on c.article_no = b.article_no
+		where 1 = 1
 		<include refid="search"></include>
 		order by b.article_no desc
 		limit #{start}, #{listsize}

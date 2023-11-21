@@ -13,13 +13,14 @@ const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
 
 const sidoList = ref([]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
-var entireAttractionInfoList = ref([]);     //VSelect에서 선택한 지역의 전체 관광지 정보
-var attractionInfoList = ref([]);           //관광지 유형 조건에 맞는 관광지 정보
-const selectAttraction = ref({});           //테이블에서 선택한 관광지 1개의 정보
-const attractionTypeMap = new Map();        //관광지 유형 코드로 문자열을 얻어오기 위한 Map
-const sidoTypeMap = new Map();              //시/도 코드로 해당 지역 문자열을 얻어오기 위한 Map
-const selectedAttractionType = ref([]);     //checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', })
-const selectedItineraries = ref();          //checkbox의 선택된 관광지 (여행 계획)들을 저장하는 배열 (예: @/util/attraction-type.js의 sampleSelectedItineraries)
+var entireAttractionInfoList = ref([]);             //VSelect에서 선택한 지역의 전체 관광지 정보
+var attractionInfoList = ref([]);                   //관광지 유형 조건에 맞는 관광지 정보
+const selectAttraction = ref({});                   //테이블에서 선택한 관광지 1개의 정보
+const attractionTypeMap = new Map();                //관광지 유형 코드로 문자열을 얻어오기 위한 Map
+const sidoTypeMap = new Map();                      //시/도 코드로 해당 지역 문자열을 얻어오기 위한 Map
+const mapSelectedAttractionType = ref([]);          //(테이블의 행) checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', }) -> 지도 출력
+const itinerarySelectedAttraction = ref([]);        //(여행 일정) checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', }) -> 사이드바에 출력
+const selectedItineraries = ref();                  //checkbox의 선택된 관광지 (여행 계획)들을 저장하는 배열 (예: @/util/attraction-type.js의 sampleSelectedItineraries)
 
 const param = ref({
     // serviceKey: VITE_OPEN_API_SERVICE_KEY,
@@ -126,7 +127,7 @@ const queryAttractions = () => {
     var filteredAttractionInfoList = [];
 
     entireAttractionInfoList.value.forEach((item) => {
-        selectedAttractionType.value.forEach((checked) => {
+        mapSelectedAttractionType.value.forEach((checked) => {
             if (item.contentTypeId == checked) {
                 filteredAttractionInfoList.push(item);
             }
@@ -141,14 +142,14 @@ const onChangeCheckbox = () => {
     if(entireAttractionInfoList.value.length == 0 || attractionInfoList.value.length == 0) {
         if(param.value.sidoCode == 0) {
             alert('시/도를 선택해주시기 바랍니다.');
-            selectedAttractionType.value = [];
+            mapSelectedAttractionType.value = [];
 
             return;
         }
 
         else if(param.value.gugunCode == 0) {
             alert('구/군을 선택해주시기 바랍니다.');
-            selectedAttractionType.value = [];
+            mapSelectedAttractionType.value = [];
 
             return;
         }
@@ -159,7 +160,7 @@ const onChangeCheckbox = () => {
         return;
     }
 
-    if (selectedAttractionType.value.length == 0) {
+    if (mapSelectedAttractionType.value.length == 0) {
         // attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
         attractionInfoList.value = defaultMapLocation;
 
@@ -183,9 +184,9 @@ const selectAllAttractionType = () => {
     }
 
     //checkbox 초기화 - 모두 선택
-    selectedAttractionType.value = [];
+    mapSelectedAttractionType.value = [];
     attractionType.forEach((item) => {
-        selectedAttractionType.value.push(item.key);
+        mapSelectedAttractionType.value.push(item.key);
     });
 
     //조건에 맞는 관광지 로드 (전체)
@@ -194,11 +195,25 @@ const selectAllAttractionType = () => {
 
 const deselectAllAttractionType = () => {
     //checkbox 초기화 - 모두 선택 해제
-    selectedAttractionType.value = [];
+    mapSelectedAttractionType.value = [];
 
     //조건에 맞는 관광지 로드 (0개 관광지 로드)
     attractionInfoList.value = [];
     attractionInfoList.value.push(defaultMapLocation);
+};
+
+const onChangeItineraryCheckbox = (attractionInfo) => {
+    if (attractionInfo.isSelected) {
+        //객체 복사 필요할 듯!
+        selectedItineraries.value.push(JSON.parse(JSON.stringify(attractionInfo)));
+    } else {
+        const index = selectedItineraries.value.findIndex(
+            (item) => item.contentType === attractionInfo.contentType
+        );
+        if (index !== -1) {
+            selectedItineraries.value.splice(index, 1);
+        }
+    }
 };
 </script>
 
@@ -221,7 +236,7 @@ const deselectAllAttractionType = () => {
         <!-- 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점 -->
         <div id='attraction-options-div' >
             <template v-for='item in attractionType'>
-                <input type='checkbox' :value='item.key' :id='item.value' class='attraction-options' @change='onChangeCheckbox' v-model='selectedAttractionType'>
+                <input type='checkbox' :value='item.key' :id='item.value' class='attraction-options' @change='onChangeCheckbox' v-model='mapSelectedAttractionType'>
                 <label :for='item.value' class='attraction-options'>{{ item.value }}</label>
             </template>
 
@@ -257,7 +272,7 @@ const deselectAllAttractionType = () => {
                         <!-- 아래는 삭제 필요 -->
                         <td>{{ attractionInfo.contentId }}</td>
                         <!-- 아래는 수정 중 (완료 X) -->
-                        <td><input type='checkbox' :value='attractionInfo.content_id' :id='attractionInfo.value' class='attraction-options' @change='' v-model='selectedItineraries'></td>
+                        <td><input type='checkbox' :value='attractionInfo.content_id' :id='"ch" + attractionInfo.value' class='attraction-options' @change='onChangeItineraryCheckbox(attractionInfo)' v-model='itinerarySelectedAttraction'></td>
                     </tr>
                 </tbody>
             </table>
