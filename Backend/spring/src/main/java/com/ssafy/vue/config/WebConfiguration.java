@@ -38,7 +38,8 @@ public class WebConfiguration implements WebMvcConfigurer {
 //			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
 //			.allowCredentials(true)
 //			.exposedHeaders("*")
-			.maxAge(1800); // Pre-flight Caching
+			.maxAge(1800)
+			; // Pre-flight Caching
 	}
 
 //	@Override

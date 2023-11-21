@@ -6,6 +6,7 @@ const router = useRouter();
 import { useMemberStore } from "@/stores/member";
 const memberStore = useMemberStore();
 const { checkPwd } = memberStore;
+const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
 
 const IdAndPwd = ref({
   userId: "",
