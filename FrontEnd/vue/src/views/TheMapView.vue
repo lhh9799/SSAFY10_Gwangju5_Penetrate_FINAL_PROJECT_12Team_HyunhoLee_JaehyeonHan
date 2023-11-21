@@ -12,267 +12,340 @@ const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
 
 const sidoList = ref([]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
-var entireAttractionInfoList = ref([]);     //VSelect에서 선택한 지역의 전체 관광지 정보
-var attractionInfoList = ref([]);           //관광지 유형 조건에 맞는 관광지 정보
-const selectAttraction = ref({});           //테이블에서 선택한 관광지 1개의 정보
-const attractionTypeMap = new Map();        //관광지 유형 코드로 문자열을 얻어오기 위한 Map
-const selectedAttractionType = ref([]);     //checkbox의 선택된 항목들을 저장하는 배열 (예: { key: 12, value: '관광지', })
+const selectedLocation = ref([]); // 여행 계획 선택
+const planAdd = ref("");
+var entireAttractionInfoList = ref([]); //VSelect에서 선택한 지역의 전체 관광지 정보
+var attractionInfoList = ref([]); //관광지 유형 조건에 맞는 관광지 정보
+const selectAttraction = ref({}); //테이블에서 선택한 관광지 1개의 정보
+const attractionTypeMap = new Map(); //관광지 유형 코드로 문자열을 얻어오기 위한 Map
+const selectedAttractionType = ref([]); //checkbox의 선택된 항목들을 저장하는 배열 (예: { key: 12, value: '관광지', })
 
 const param = ref({
-    // serviceKey: VITE_OPEN_API_SERVICE_KEY,
-    pageNo: 1,
-    numOfRows: 20,
-    sidoCode: 0,
-    gugunCode: 0,
+  pageNo: 1,
+  numOfRows: 20,
+  sidoCode: 0,
+  gugunCode: 0,
 });
 
+const select = (attractionInfo) => {
+  if (attractionInfo.isSelected) {
+    selectedLocation.value.push(attractionInfo);
+  } else {
+    const index = selectedLocation.value.findIndex(
+      (item) => item.contentType === attractionInfo.contentType
+    );
+    if (index !== -1) {
+      selectedLocation.value.splice(index, 1);
+    }
+  }
+
+  console.log(selectedLocation.value);
+  planAdd.value = "";
+};
 onMounted(() => {
-    getSidoList();
-    getAttractionTypeMap();
+  getSidoList();
+  getAttractionTypeMap();
 });
 
 //attractionTypeMap라는 Map 자료구조에 관광지 유형 쌍 대입 (예: { key: 12, value: '관광지', })
 const getAttractionTypeMap = () => {
-    attractionType.forEach((item) => {
-        attractionTypeMap.set(item.key, item.value);
-    });
+  attractionType.forEach((item) => {
+    attractionTypeMap.set(item.key, item.value);
+  });
 };
 
 const getSidoList = () => {
-    getSidoFromSidoTable(
-        ({ data }) => {
-            let options = [];
-            options.push({ text: "시도선택", value: "" });
-            data.forEach((sido) => {
-            options.push({ text: sido.sidoName, value: sido.sidoCode });
-        });
-        sidoList.value = options;
-        },
-        (err) => {
-            console.log(err);
-        }
-    );
+  getSidoFromSidoTable(
+    ({ data }) => {
+      let options = [];
+      options.push({ text: "시도선택", value: "" });
+      data.forEach((sido) => {
+        options.push({ text: sido.sidoName, value: sido.sidoCode });
+      });
+      sidoList.value = options;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
 };
 
 const onChangeSido = (val) => {
-    param.value.sidoCode = val;
+  param.value.sidoCode = val;
 
-    getgugunDtoFromSidoTable(
-        { sido: val },
-        ({ data }) => {
-            let options = [];
-            options.push({ text: "구군선택", value: "" });
-            data.forEach((gugun) => {
-                options.push({ text: gugun.gugunName, value: gugun.gugunCode });
-            });
-            gugunList.value = options;
-        },
-        (err) => {
-            console.log(err);
-        }
-    );
+  getgugunDtoFromSidoTable(
+    { sido: val },
+    ({ data }) => {
+      let options = [];
+      options.push({ text: "구군선택", value: "" });
+      data.forEach((gugun) => {
+        options.push({ text: gugun.gugunName, value: gugun.gugunCode });
+      });
+      gugunList.value = options;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
 };
 
 const onChangeGugun = (val) => {
-    //관광지 정보 쿼리를 위한 객체에 선택한 구/군 코드 저장
-    param.value.gugunCode = val;
+  //관광지 정보 쿼리를 위한 객체에 선택한 구/군 코드 저장
+  param.value.gugunCode = val;
 
-    //지역 별 1회 실행 (선택한 지역의 전체 관광지 조회)
-    getAttractionInfoList();
+  //지역 별 1회 실행 (선택한 지역의 전체 관광지 조회)
+  getAttractionInfoList();
 
-    //조건에 맞는 관광지 로드
-    // queryAttractions();
-    selectAllAttractionType();
+  //조건에 맞는 관광지 로드
+  // queryAttractions();
+  selectAllAttractionType();
 };
 
 //선택한 지역의 전체 관광지 조회
 const getAttractionInfoList = () => {
-    listAttraction(
-        param.value,
-        ({ data }) => {
-            entireAttractionInfoList.value = data;
-            attractionInfoList.value = data;
-        },
-        (err) => {
-            console.log(err);
-        }
-    );
+  listAttraction(
+    param.value,
+    ({ data }) => {
+      entireAttractionInfoList.value = data;
+      attractionInfoList.value = data;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
 };
 
 const viewAttractionInfoList = (attraction) => {
-    selectAttraction.value = attraction;
+  selectAttraction.value = attraction;
 };
 
 //선택한 지역의 관광지 중 선택한 체크박스에 부합하는 관광지 리스트 출력
 //TODO: 체크박스에 부합하는 관광지가 없는 경우 지도 출력되지 않는 문제 있음 (null 체크) -> 지도 원래 위치 넣기!
 const queryAttractions = () => {
-    //관광지 유형 모두 체크 해제된 상태 -> 선택된 지역의 모든 관광지 출력
-    if (attractionInfoList.value.length == 0) {
-        attractionInfoList.value = entireAttractionInfoList;
+  //관광지 유형 모두 체크 해제된 상태 -> 선택된 지역의 모든 관광지 출력
+  if (attractionInfoList.value.length == 0) {
+    attractionInfoList.value = entireAttractionInfoList;
 
-        return;
-    }
+    return;
+  }
 
-    var filteredAttractionInfoList = [];
+  var filteredAttractionInfoList = [];
 
-    entireAttractionInfoList.value.forEach((item) => {
-        selectedAttractionType.value.forEach((checked) => {
-            if (item.contentTypeId == checked) {
-                filteredAttractionInfoList.push(item);
-            }
-        });
+  entireAttractionInfoList.value.forEach((item) => {
+    selectedAttractionType.value.forEach((checked) => {
+      if (item.contentTypeId == checked) {
+        filteredAttractionInfoList.push(item);
+      }
     });
+  });
 
-    attractionInfoList.value = filteredAttractionInfoList;
+  attractionInfoList.value = filteredAttractionInfoList;
 };
 
 const onChangeCheckbox = () => {
-    //전체 관광지 리스트가 비어있거나 조건에 맞는 관광지(해당 지역의 관광지 유형 (예: 서울 강서구 여행코스))가 없는 경우 알림창 출력 후 리턴
-    if(entireAttractionInfoList.value.length == 0 || attractionInfoList.value.length == 0) {
-        if(param.value.sidoCode == 0) {
-            alert('시/도를 선택해주시기 바랍니다.');
-            selectedAttractionType.value = [];
+  //전체 관광지 리스트가 비어있거나 조건에 맞는 관광지(해당 지역의 관광지 유형 (예: 서울 강서구 여행코스))가 없는 경우 알림창 출력 후 리턴
+  if (entireAttractionInfoList.value.length == 0 || attractionInfoList.value.length == 0) {
+    if (param.value.sidoCode == 0) {
+      alert("시/도를 선택해주시기 바랍니다.");
+      selectedAttractionType.value = [];
 
-            return;
-        }
+      return;
+    } else if (param.value.gugunCode == 0) {
+      alert("구/군을 선택해주시기 바랍니다.");
+      selectedAttractionType.value = [];
 
-        else if(param.value.gugunCode == 0) {
-            alert('구/군을 선택해주시기 바랍니다.');
-            selectedAttractionType.value = [];
-
-            return;
-        }
-
-        alert('해당 지역에 관광지 정보가 없습니다.');
-
-        return;
+      return;
     }
 
-    if (selectedAttractionType.value.length == 0) {
-        attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
+    alert("해당 지역에 관광지 정보가 없습니다.");
 
-        return;
-    }
+    return;
+  }
 
-    //조건에 맞는 관광지 출력
-    queryAttractions();
+  if (selectedAttractionType.value.length == 0) {
+    attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
+
+    return;
+  }
+
+  //조건에 맞는 관광지 출력
+  queryAttractions();
 };
 
 const selectAllAttractionType = () => {
-    if(param.value.sidoCode == 0) {
-        alert('시/도를 선택해주시기 바랍니다.');
+  if (param.value.sidoCode == 0) {
+    alert("시/도를 선택해주시기 바랍니다.");
 
-        return;
+    return;
+  } else if (param.value.gugunCode == 0) {
+    alert("구/군을 선택해주시기 바랍니다.");
 
-    } else if(param.value.gugunCode == 0) {
-        alert('구/군을 선택해주시기 바랍니다.');
+    return;
+  }
 
-        return;
-    }
+  //checkbox 초기화 - 모두 선택
+  selectedAttractionType.value = [];
+  attractionType.forEach((item) => {
+    selectedAttractionType.value.push(item.key);
+  });
 
-    //checkbox 초기화 - 모두 선택
-    selectedAttractionType.value = [];
-    attractionType.forEach((item) => {
-        selectedAttractionType.value.push(item.key);
-    });
-
-    //조건에 맞는 관광지 로드 (전체)
-    attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
+  //조건에 맞는 관광지 로드 (전체)
+  attractionInfoList.value = JSON.parse(JSON.stringify(entireAttractionInfoList.value));
 };
 
 const deselectAllAttractionType = () => {
-    //checkbox 초기화 - 모두 선택 해제
-    selectedAttractionType.value = [];
+  //checkbox 초기화 - 모두 선택 해제
+  selectedAttractionType.value = [];
 
-    //조건에 맞는 관광지 로드 (0개 관광지 로드)
-    attractionInfoList.value = [];
-    attractionInfoList.value.push(defaultMapLocation);
+  //조건에 맞는 관광지 로드 (0개 관광지 로드)
+  attractionInfoList.value = [];
+  attractionInfoList.value.push(defaultMapLocation);
+};
+
+// const modifyPwd = ref({
+//   userId: "",
+//   day: "",
+//   place: "",
+//   latitude: "",
+//   longtitude: "",
+//   longtitude: "",
+// });
+
+const add = async () => {
+  console.log(selectedLocation.value);
 };
 </script>
 
 <template>
-    <div class="container text-center mt-3">
-        <div class="alert alert-success" role="alert">여행지 정보</div>
-        <div class="row mb-2">
-            <div class="col d-flex flex-row-reverse">
-                <VSelect :selectOption="sidoList" @onKeySelect="onChangeSido" />
-            </div>
-            <div class="col">
-                <VSelect :selectOption="gugunList" @onKeySelect="onChangeGugun" />
-            </div>
-        </div>
-        <div class="col d-flex flex-row-reverse">
-                
-        </div>
-
-        <!-- 관광지 유형 옵션 (checkbox) -->
-        <!-- 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점 -->
-        <div id='attraction-options-div' >
-            <template v-for='item in attractionType'>
-                <input type='checkbox' :value='item.key' :id='item.value' class='attraction-options' @change='onChangeCheckbox' v-model='selectedAttractionType'>
-                <label :for='item.value' class='attraction-options'>{{ item.value }}</label>
-            </template>
-
-            <!-- 전체 선택, 전채 선택 해제 버튼 -->
-            <div class='checkbox-buttons'>
-                <button class="btn btn-outline-success" type="button" id='deselect-all' @click='selectAllAttractionType'>전체 선택</button>
-                <button class="btn btn-outline-primary" type="button" id='deselect-all' @click='deselectAllAttractionType'>전체 선택 해제</button>
-            </div>
-        </div>
-
-        <div>
-            <AttractionKakaoMap :attractionInfoList='attractionInfoList' :selectAttraction='selectAttraction' />
-            <table class="table table-hover">
-                <thead>
-                    <tr class="text-center">
-                        <th scope="col">이미지</th>
-                        <th scope="col">관광지 유형</th>
-                        <th scope="col">관광지 명</th>
-                        <th scope="col">시/도</th>
-                        <th scope="col">구/군</th>
-                        <th scope="col">주소</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId" @click="viewAttractionInfoList(attractionInfo)"> -->
-                    <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId"> -->
-                    <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType" @click="viewAttractionInfoList(attractionInfo)">
-                        <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
-                        <td>{{ attractionInfo.contentTypeId }}</td>
-                        <td>{{ attractionInfo.title }}</td>
-                        <td>{{ attractionInfo.sidoCode }}</td>
-                        <td>{{ attractionInfo.gugunCode }}</td>
-                        <td>{{ attractionInfo.addr1 }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="container text-center mt-3">
+    <div class="alert alert-success" role="alert">여행지 정보</div>
+    <div class="row mb-2">
+      <div class="col d-flex flex-row-reverse">
+        <VSelect :selectOption="sidoList" @onKeySelect="onChangeSido" />
+      </div>
+      <div class="col">
+        <VSelect :selectOption="gugunList" @onKeySelect="onChangeGugun" />
+      </div>
     </div>
+    <div class="col d-flex flex-row-reverse"></div>
+
+    <!-- 관광지 유형 옵션 (checkbox) -->
+    <!-- 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점 -->
+    <div id="attraction-options-div">
+      <template v-for="item in attractionType">
+        <input
+          type="checkbox"
+          :value="item.key"
+          :id="item.value"
+          class="attraction-options"
+          @change="onChangeCheckbox"
+          v-model="selectedAttractionType"
+        />
+        <label :for="item.value" class="attraction-options">{{ item.value }}</label>
+      </template>
+
+      <!-- 전체 선택, 전채 선택 해제 버튼 -->
+      <div class="checkbox-buttons">
+        <button
+          class="btn btn-outline-success"
+          type="button"
+          id="deselect-all"
+          @click="selectAllAttractionType"
+        >
+          전체 선택
+        </button>
+        <button
+          class="btn btn-outline-primary"
+          type="button"
+          id="deselect-all"
+          @click="deselectAllAttractionType"
+        >
+          전체 선택 해제
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <AttractionKakaoMap
+        :attractionInfoList="attractionInfoList"
+        :selectAttraction="selectAttraction"
+      />
+      <table class="table table-hover">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">이미지</th>
+            <th scope="col">관광지 유형</th>
+            <th scope="col">관광지 명</th>
+            <th scope="col">시/도</th>
+            <th scope="col">구/군</th>
+            <th scope="col">주소</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId" @click="viewAttractionInfoList(attractionInfo)"> -->
+          <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentId"> -->
+          <tr
+            class="text-center"
+            v-for="attractionInfo in attractionInfoList"
+            :key="attractionInfo.contentType"
+            @click="viewAttractionInfoList(attractionInfo)"
+          >
+            <th><img :src="attractionInfo.firstImage" style="height: 50px" /></th>
+            <td>{{ attractionInfo.contentTypeId }}</td>
+            <td>{{ attractionInfo.title }}</td>
+            <td>{{ attractionInfo.sidoCode }}</td>
+            <td>{{ attractionInfo.gugunCode }}</td>
+            <td>{{ attractionInfo.addr1 }}</td>
+            <td>
+              <input
+                type="checkbox"
+                :id="'ch_' + attractionInfo.contentType"
+                :value="attractionInfo.contentType"
+                v-model="attractionInfo.isSelected"
+                @change="select(attractionInfo)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="col-6">
+        <div class="alert alert-info" role="alert">
+          <strong>선택된 장소:</strong>
+          <ul>
+            <li v-for="location in selectedLocation" :key="location.contentType">
+              {{ location.title }}
+            </li>
+          </ul>
+          <button type="button" class="btn btn-outline-primary mb-3" @click="add">추가</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style>
 mark.purple {
-    background: linear-gradient(to top, #c354ff 20%, transparent 30%);
+  background: linear-gradient(to top, #c354ff 20%, transparent 30%);
 }
 
 .attraction-options-div {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .attraction-options {
-    /* width: 500px; */
-    zoom: 1.2;
-    padding-right: 3%;
+  /* width: 500px; */
+  zoom: 1.2;
+  padding-right: 3%;
 }
 
 .checkbox-buttons {
-    display: flex;
-    /* justify-items: center; */
-    /* justify-content: center; */
-    justify-content: end;
-    vertical-align: middle;
-    margin-top: 1%;
-    margin-bottom: 1%;
+  display: flex;
+  /* justify-items: center; */
+  /* justify-content: center; */
+  justify-content: end;
+  vertical-align: middle;
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
 </style>
