@@ -15,6 +15,8 @@ defineProps({ article: Object });
     </td>
     <td>{{ article.userName }}</td>
     <td>{{ article.hit }}</td>
+    <td>{{ article.commentsCount }}</td>
+    <!-- <td>{{ article.comments ? article.comments.length : 0 }}</td> -->
     <td>{{ article.registerTime }}</td>
   </tr>
 </template>

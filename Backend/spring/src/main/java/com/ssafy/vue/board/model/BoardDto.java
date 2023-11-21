@@ -20,6 +20,8 @@ public class BoardDto {
 	private String content;
 	@ApiModelProperty(value = "조회수")
 	private int hit;
+	@ApiModelProperty(value = "댓글수")
+	private int commentsCount;
 	@ApiModelProperty(value = "작성일")
 	private String registerTime;
 	@ApiModelProperty(value = "업로드 파일정보")
@@ -75,6 +77,14 @@ public class BoardDto {
 		this.hit = hit;
 	}
 
+	public int getCommentsCount() {
+		return commentsCount;
+	}
+
+	public void setCommentsCount(int commentsCount) {
+		this.commentsCount = commentsCount;
+	}
+
 	public String getRegisterTime() {
 		return registerTime;
 	}
@@ -102,8 +112,8 @@ public class BoardDto {
 	@Override
 	public String toString() {
 		return "BoardDto [articleNo=" + articleNo + ", userId=" + userId + ", userName=" + userName + ", subject="
-				+ subject + ", content=" + content + ", hit=" + hit + ", registerTime=" + registerTime + ", fileInfos="
-				+ fileInfos + ", comments=" + comments + "]";
+				+ subject + ", content=" + content + ", hit=" + hit + ", commentsCount=" + commentsCount
+				+ ", registerTime=" + registerTime + ", fileInfos=" + fileInfos + ", comments=" + comments + "]";
 	}
 
 }
