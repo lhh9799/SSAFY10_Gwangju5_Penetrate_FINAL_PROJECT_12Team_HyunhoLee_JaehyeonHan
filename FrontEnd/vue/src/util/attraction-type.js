@@ -48,4 +48,22 @@ export const defaultMapLocation = {
   "latitude": 33.450701,
   "longitude": 126.570667,
   "mlevel": "0"
-}
+};
+
+export const sampleSelectedItineraries = {
+  "contentId": 126480,
+  "contentTypeId": 12,
+  "title": "관악산",
+  "addr1": "서울특별시 관악구 관악로",
+  "addr2": "(신림동)",
+  "zipcode": "8826",
+  "tel": "",
+  "firstImage": "http://tong.visitkorea.or.kr/cms/resource/30/1857230_image2_1.jpg",
+  "firstImage2": "http://tong.visitkorea.or.kr/cms/resource/30/1857230_image3_1.jpg",
+  "readcount": 116152,
+  "sidoCode": 1,
+  "gugunCode": 5,
+  "latitude": 37.44840364,
+  "longitude": 126.9540988,
+  "mlevel": "6"
+};

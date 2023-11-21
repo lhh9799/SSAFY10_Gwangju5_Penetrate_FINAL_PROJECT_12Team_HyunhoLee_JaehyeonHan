@@ -18,7 +18,8 @@ var attractionInfoList = ref([]);           //관광지 유형 조건에 맞는 
 const selectAttraction = ref({});           //테이블에서 선택한 관광지 1개의 정보
 const attractionTypeMap = new Map();        //관광지 유형 코드로 문자열을 얻어오기 위한 Map
 const sidoTypeMap = new Map();              //시/도 코드로 해당 지역 문자열을 얻어오기 위한 Map
-const selectedAttractionType = ref([]);     //checkbox의 선택된 항목들을 저장하는 배열 (예: { key: 12, value: '관광지', })
+const selectedAttractionType = ref([]);     //checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', })
+const selectedItineraries = ref();          //checkbox의 선택된 관광지 (여행 계획)들을 저장하는 배열 (예: @/util/attraction-type.js의 sampleSelectedItineraries)
 
 const param = ref({
     // serviceKey: VITE_OPEN_API_SERVICE_KEY,
@@ -242,6 +243,7 @@ const deselectAllAttractionType = () => {
                         <th scope="col">시/도</th>
                         <!-- <th scope="col">구/군</th> -->
                         <th scope="col">주소</th>
+                        <th scope="col">일정에 추가</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -252,6 +254,10 @@ const deselectAllAttractionType = () => {
                         <td>{{ sidoTypeMap.get(attractionInfo.sidoCode) }}</td>
                         <!-- <td>{{ attractionInfo.gugunCode }}</td> -->
                         <td>{{ attractionInfo.addr1 }}</td>
+                        <!-- 아래는 삭제 필요 -->
+                        <td>{{ attractionInfo.contentId }}</td>
+                        <!-- 아래는 수정 중 (완료 X) -->
+                        <td><input type='checkbox' :value='attractionInfo.content_id' :id='attractionInfo.value' class='attraction-options' @change='' v-model='selectedItineraries'></td>
                     </tr>
                 </tbody>
             </table>
