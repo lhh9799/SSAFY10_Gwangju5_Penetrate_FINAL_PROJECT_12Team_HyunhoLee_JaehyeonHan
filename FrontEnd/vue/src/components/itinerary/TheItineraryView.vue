@@ -11,7 +11,7 @@
 
         <h1>커스텀 탭</h1>
         <div class='day-tabs-div'>
-            <button class='my-tab-style' :value='index' v-for="index in userTravelDays" :key="index" @click='onTravelDayTabClick'>
+            <button class='my-tab-style' :value='index' v-for="index in userTravelDays + 1" :key="index" @click='onTravelDayTabClick'>
               {{ index }}
             </button>
         </div>
@@ -83,6 +83,9 @@ const loadData = () => {
     item.day = targetDay;     //여행 계획 DB에 저장하기 위해 일자 설정
     item.addr = item.addr1;   //여행 계획 DB 저장 위해 주소 저장
     displayUserItinerary.value.push(item);
+
+    //로그인한 사용자의 최대 여행 일수 계산
+    userTravelDays.value = Math.max(userTravelDays.value, item.day);
   });
 
   // console.log('displayUserItinerary.value');
