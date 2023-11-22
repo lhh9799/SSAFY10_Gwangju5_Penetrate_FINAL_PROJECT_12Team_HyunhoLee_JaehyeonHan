@@ -1,13 +1,4 @@
 <template>
-  <div>
-    <b-tabs content-class="mt-3">
-      <b-tab title="First" active><p>I'm the first tab</p></b-tab>
-      <b-tab title="Second"><p>I'm the second tab</p></b-tab>
-      <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab>
-    </b-tabs>
-  </div>
-
-
   <div class="sidebar">
     <div class="col-6">
       <div class="alert alert-info" role="alert" style="flex: 1; height: 1000px;">
@@ -16,11 +7,35 @@
           <button type="button" id="save-button" class="btn btn-outline-primary" @click="save">저장하기</button>
         </div>
         <p>여행 일정을 계획해보세요</p>
-        <template v-for='day in days'>
+
+        <h1>커스텀 탭</h1>
+        <!-- <template v-for=''> -->
+        <template>
+          <div class='my-tab-style'>
+            안녕
+          </div>
+        </template>
+
+        <h1>hi</h1>
+        <div>
+            <tabs>
+                <tab name="First tab">
+                    First tab content
+                </tab>
+                <tab name="Second tab">
+                    Second tab content
+                </tab>
+                <tab name="Third tab">
+                    Third tab content
+                </tab>
+            </tabs>
+        </div>
+
+        <!-- <template v-for='day in days'>
           <div>
             <p>{{ day }}일차</p>
           </div>
-        </template>
+        </template> -->
 
         <draggable :list="props.selectedItineraries" item-key="name" class="list-group" ghost-class="ghost" @start="dragging = true" @end="dragging = false" >
         
@@ -66,26 +81,21 @@
   align-self: flex-end;
 }
 
+.my-tab-style {
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
 </style>
 
 <script setup>
 import { ref, defineProps } from 'vue';
 import draggable from "vuedraggable";
-// import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-// Import Bootstrap and BootstrapVue CSS files (order is important)
-// import 'bootstrap/dist/css/bootstrap.css'
-// import 'bootstrap-vue/dist/bootstrap-vue.css'
-
-// Make BootstrapVue available throughout your project
-// Vue.use(BootstrapVue)
-// Optionally install the BootstrapVue icon components plugin
-// Vue.use(IconsPlugin)
+import {Tabs, Tab} from 'vue3-tabs-component';
 
 const props = defineProps({ selectedItineraries: Array });
 const day = ref(1);
 const days = ref(3);
-
-const tab = ref(['1', '2', '3']);
 
 const save = () => {
   console.log('save 버튼 클릭됨');

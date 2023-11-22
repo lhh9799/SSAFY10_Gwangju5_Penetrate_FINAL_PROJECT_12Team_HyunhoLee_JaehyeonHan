@@ -227,7 +227,9 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
 </script>
 
 <template>
-    <div class="container text-center mt-3">
+    <!-- <div class="container text-center mt-3"> -->
+    <div class="text-center" style='width: 90%; margin: auto;'>
+    <!-- <div> -->
         <div class="alert alert-success" role="alert">여행지 정보</div>
         <div class='content'>
             <div class='left-area'>
@@ -251,10 +253,10 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
                     </template>
 
                     <!-- 전체 선택, 전채 선택 해제 버튼 -->
-                    <div class='checkbox-buttons'>
+                    <!-- <div class='checkbox-buttons'> -->
                         <button class="btn btn-outline-success" type="button" id='deselect-all' @click='selectAllAttractionType'>전체 선택</button>
                         <button class="btn btn-outline-primary" type="button" id='deselect-all' @click='deselectAllAttractionType'>전체 선택 해제</button>
-                    </div>
+                    <!-- </div> -->
                 </div>
 
                 <div>
@@ -299,27 +301,33 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
 </template>
 
 <style>
+label {
+    display: flex;
+    flex-basis: content;
+    vertical-align: middle;
+}
+
 mark.purple {
     background: linear-gradient(to top, #c354ff 20%, transparent 30%);
 }
 
-.attraction-options-div {
+#attraction-options-div {
     display: flex;
     flex-wrap: wrap;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-right: 10%;
 }
 
 .attraction-options {
-    /* width: 500px; */
     zoom: 1.2;
     padding-right: 3%;
 }
 
 .checkbox-buttons {
     display: flex;
-    /* justify-items: center; */
-    /* justify-content: center; */
-    justify-content: end;
-    vertical-align: middle;
     margin-top: 1%;
     margin-bottom: 1%;
 }

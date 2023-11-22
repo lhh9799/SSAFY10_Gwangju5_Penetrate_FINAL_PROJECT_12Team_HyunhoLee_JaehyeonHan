@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ssafy.vue.member.model.ItineraryDto;
 import com.ssafy.vue.member.model.MemberDto;
 import com.ssafy.vue.member.model.NewPwdDto;
 
@@ -24,4 +25,6 @@ public interface MemberMapper {
 	String getPwdFromId(String userId) throws SQLException;
 	//한재현 추가
 	void updatePwd(NewPwdDto newPwd) throws SQLException;
+	//이현호 추가
+	void plan(ItineraryDto itineraryDto) throws SQLException;
 }

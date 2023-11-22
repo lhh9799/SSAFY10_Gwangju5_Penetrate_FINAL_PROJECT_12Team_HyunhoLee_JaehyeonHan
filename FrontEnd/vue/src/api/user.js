@@ -38,4 +38,8 @@ async function modifyPassword(modifyPwd, success, fail) {
   await local.post(`/user/modify`, modifyPwd).then(success).catch(fail);
 }
 
+async function registerPlan(itineraryDto, success, fail) {
+  await local.post(`/user/plan`, itineraryDto).then(success).catch(fail);
+}
+
 export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, check, modifyPassword };

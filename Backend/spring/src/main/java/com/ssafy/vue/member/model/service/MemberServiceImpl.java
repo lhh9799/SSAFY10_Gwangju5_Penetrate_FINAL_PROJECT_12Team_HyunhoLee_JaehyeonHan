@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.vue.member.model.ItineraryDto;
 import com.ssafy.vue.member.model.MemberDto;
 import com.ssafy.vue.member.model.NewPwdDto;
 import com.ssafy.vue.member.model.mapper.MemberMapper;
@@ -70,6 +71,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void updatePwd(NewPwdDto newPwd) throws SQLException {
 		memberMapper.updatePwd(newPwd);
+	}
+
+	@Override
+	public void plan(ItineraryDto itineraryDto) throws SQLException {
+		memberMapper.plan(itineraryDto);
 	}
 
 }

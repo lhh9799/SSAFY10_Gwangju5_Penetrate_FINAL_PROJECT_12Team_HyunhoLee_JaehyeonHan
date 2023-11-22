@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.vue.member.model.IdAndPwdDto;
+import com.ssafy.vue.member.model.ItineraryDto;
 import com.ssafy.vue.member.model.MemberDto;
 import com.ssafy.vue.member.model.NewPwdDto;
 import com.ssafy.vue.member.model.service.MemberService;
@@ -223,6 +223,24 @@ public class MemberController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 			return new ResponseEntity<Map<String, Object>>(resultMap, status);
 		}
+	}
+	
+	//이현호 추가
+	@ApiOperation(value = "여행 계획 등록", notes = "여행 계획 등록")
+	@PostMapping("/plan")
+	public ResponseEntity<Map<String, Object>> plan(
+			@RequestBody @ApiParam(value = "여행 계획", required = true) ItineraryDto itineraryDto) {
+		log.debug("plan ItineraryDto : {}", itineraryDto);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.plan(itineraryDto);
+		} catch (Exception e) {
+			log.debug("여행 계획 등록 에러 발생 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 }
