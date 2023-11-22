@@ -89,16 +89,37 @@
 </style>
 
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
 import draggable from "vuedraggable";
 import {Tabs, Tab} from 'vue3-tabs-component';
+import { useMemberStore } from "@/stores/member";
+import { registerPlan, getPlan } from "@/api/user";
 
 const props = defineProps({ selectedItineraries: Array });
+const { getUserInfo } = useMemberStore();
+const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
 const day = ref(1);
 const days = ref(3);
+const userId = memberStoreData.userInfo.userId;
 
 const save = () => {
   console.log('save 버튼 클릭됨');
 }
+
+onMounted(() => {
+  console.log('userId');
+  console.log(userId);
+
+  getPlan(
+    userId,
+    ({data}) => {
+      console.log('getPlan - data');
+      console.log(data);
+    },
+    (error) => {
+      console.log('getPlan - error');
+    }
+  );
+});
 
 </script>

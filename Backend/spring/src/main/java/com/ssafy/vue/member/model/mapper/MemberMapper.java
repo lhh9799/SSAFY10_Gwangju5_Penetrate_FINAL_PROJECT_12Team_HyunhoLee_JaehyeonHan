@@ -1,6 +1,7 @@
 package com.ssafy.vue.member.model.mapper;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -26,5 +27,7 @@ public interface MemberMapper {
 	//한재현 추가
 	void updatePwd(NewPwdDto newPwd) throws SQLException;
 	//이현호 추가
-	void plan(ItineraryDto itineraryDto) throws SQLException;
+	void registPlan(ItineraryDto itineraryDto) throws SQLException;
+	//이현호 추가
+	List<ItineraryDto> getPlan(String userId) throws SQLException;
 }

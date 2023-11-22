@@ -1,6 +1,8 @@
 package com.ssafy.vue.member.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -228,19 +230,33 @@ public class MemberController {
 	//이현호 추가
 	@ApiOperation(value = "여행 계획 등록", notes = "여행 계획 등록")
 	@PostMapping("/plan")
-	public ResponseEntity<Map<String, Object>> plan(
+	public ResponseEntity<Map<String, Object>> registPlan(
 			@RequestBody @ApiParam(value = "여행 계획", required = true) ItineraryDto itineraryDto) {
-		log.debug("plan ItineraryDto : {}", itineraryDto);
+		log.debug("registPlan ItineraryDto : {}", itineraryDto);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
-			memberService.plan(itineraryDto);
+			memberService.registPlan(itineraryDto);
 		} catch (Exception e) {
 			log.debug("여행 계획 등록 에러 발생 : {}", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	@ApiOperation(value = "여행 계획 조회", notes = "여행 계획 조회 정보를 담은 Dto을 반환한다.", response = Map.class)
+	@GetMapping("/plan/{userId}")
+//	public ResponseEntity<Map<String, Object>> getPlan(
+	public ResponseEntity<List<ItineraryDto>> getPlan(
+			@PathVariable("userId") @ApiParam(value = "여행 계획을 가져올 회원의 아이디.", required = true) String userId,
+			HttpServletRequest request) throws SQLException {
+		log.debug("getPlan : {} ", userId);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		System.out.println("MemberController - getPlan 결과" + memberService.getPlan(userId));
+		
+		return new ResponseEntity<List<ItineraryDto>>(memberService.getPlan(userId), HttpStatus.OK);
 	}
 	
 }

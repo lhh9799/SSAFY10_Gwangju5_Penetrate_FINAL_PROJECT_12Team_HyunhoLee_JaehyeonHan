@@ -346,4 +346,8 @@ mark.purple {
     padding-left: 5%;
     height: 1000px;
 }
+
+button {
+    margin-right: 1%;
+}
 </style>

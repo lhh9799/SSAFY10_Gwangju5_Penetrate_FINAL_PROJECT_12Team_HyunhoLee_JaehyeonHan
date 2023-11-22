@@ -42,4 +42,10 @@ async function registerPlan(itineraryDto, success, fail) {
   await local.post(`/user/plan`, itineraryDto).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, check, modifyPassword };
+async function getPlan(userId, success, fail) {
+  console.log('getPlan - userId');
+  console.log(userId);
+  await local.get(`/user/plan/${userId}`, userId).then(success).catch(fail);
+}
+
+export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, check, modifyPassword, registerPlan, getPlan };

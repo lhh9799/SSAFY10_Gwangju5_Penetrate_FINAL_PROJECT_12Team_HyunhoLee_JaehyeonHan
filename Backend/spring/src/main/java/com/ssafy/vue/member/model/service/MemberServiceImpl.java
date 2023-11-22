@@ -2,6 +2,7 @@ package com.ssafy.vue.member.model.service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -74,8 +75,13 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void plan(ItineraryDto itineraryDto) throws SQLException {
-		memberMapper.plan(itineraryDto);
+	public void registPlan(ItineraryDto itineraryDto) throws SQLException {
+		memberMapper.registPlan(itineraryDto);
+	}
+
+	@Override
+	public List<ItineraryDto> getPlan(String userId) throws SQLException {
+		return memberMapper.getPlan(userId);
 	}
 
 }
