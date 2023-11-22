@@ -1,9 +1,9 @@
 <script>
 import hljs from "highlight.js";
 import debounce from "lodash/debounce";
-import { QuillEditor } from '@vueup/vue-quill'
+import { QuillEditor } from "@vueup/vue-quill";
 import { registArticle, modifyArticle } from "@/api/board";
-import { ref, watch } from 'vue';
+import { ref, watch } from "vue";
 
 // import theme style
 import "quill/dist/quill.core.css";
@@ -45,7 +45,7 @@ export default {
     };
   },
   methods: {
-    onEditorChange: debounce(function(value) {
+    onEditorChange: debounce(function (value) {
       this.content = value.html;
     }, 466),
     // onEditorBlur(editor) {
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, defineProps, onMounted } from 'vue';
+import { ref, defineProps, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
@@ -81,12 +81,10 @@ const route = useRoute();
 
 const myTextEditor = ref();
 //대소문자 주의! (잘 안될 때)
-const props = defineProps(
-  {
-    articleProps:Object,
-    submitType: String,
-  },
-);
+const props = defineProps({
+  articleProps: Object,
+  submitType: String,
+});
 
 const article = ref({
   articleNo: 0,
@@ -113,7 +111,7 @@ function loadArticle() {
   //write new article
   else {
     const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
-    article.value.userId = memberStoreData.userInfo.userId
+    article.value.userId = memberStoreData.userInfo.userId;
   }
 }
 
@@ -154,17 +152,21 @@ const submitArticle = () => {
   article.value.content = myTextEditor.value.editor.outerHTML;
 
   //Trims unnecessary codes (quill editor)
-  const deleteTarget1 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">';
-  const deleteTarget2 = '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL" placeholder="Embed URL">';
-  article.value.content = article.value.content.replaceAll(deleteTarget1, '');
-  article.value.content = article.value.content.replaceAll(deleteTarget2, '');
+  const deleteTarget1 =
+    '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">';
+  const deleteTarget2 =
+    '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL" placeholder="Embed URL">';
+  article.value.content = article.value.content.replaceAll(deleteTarget1, "");
+  article.value.content = article.value.content.replaceAll(deleteTarget2, "");
 
   props.submitType === "regist" ? writeArticle() : updateArticle();
 };
 
 onMounted(() => {
   //Loads original article after 100ms.
-  setTimeout(function() { loadArticle() }, 100);
+  setTimeout(function () {
+    loadArticle();
+  }, 100);
 });
 
 const subjectErrMsg = ref("");
@@ -201,7 +203,7 @@ watch(
         v-model="article.userId"
         disabled=""
         placeholder="작성자ID..."
-        readonly='readonly'
+        readonly="readonly"
       />
     </div>
     <div>
@@ -221,12 +223,16 @@ watch(
         <div v-html="content"></div>
       </div>
     </div>
-    <div style='height: 50px;'></div>
+    <div style="height: 50px"></div>
     <div class="col-auto text-center">
-      <button @click='submitArticle' class="btn btn-outline-primary mb-3" v-if="props.submitType === 'regist'">
+      <button
+        @click="submitArticle"
+        class="btn btn-outline-primary mb-3"
+        v-if="props.submitType === 'regist'"
+      >
         글작성
       </button>
-      <button @click='submitArticle' class="btn btn-outline-success mb-3" v-else>글수정</button>
+      <button @click="submitArticle" class="btn btn-outline-success mb-3" v-else>글수정</button>
       <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="moveList">
         목록으로이동...
       </button>
@@ -239,5 +245,8 @@ watch(
   /* width: 80%; */
   /* margin: auto; */
   min-width: 0px;
+}
+.form-control {
+  width: 100%;
 }
 </style>

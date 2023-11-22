@@ -20,4 +20,6 @@ public interface MemberService {
 	String getPwdFromId(String userId) throws SQLException;
 	//한재현 추가
 	void updatePwd(NewPwdDto newPwd) throws SQLException;
+	//한재현 추가
+	int duplicateCheck(String userId) throws SQLException;
 }

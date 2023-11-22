@@ -207,7 +207,7 @@ public class MemberController {
 	}
 	
 	// 한재현 추가
-	@ApiOperation(value = "비밀번호를 변경한다..", notes = "새로운 비밀번호 변경", response = Map.class)
+	@ApiOperation(value = "비밀번호를 변경한다.", notes = "새로운 비밀번호 변경", response = Map.class)
 	@PostMapping("/modify")
 	public ResponseEntity<?> modifyPwd(
 			@RequestBody @ApiParam(value = "변경할 새로운 비밀번호", required = true) NewPwdDto newPwd) {
@@ -219,6 +219,33 @@ public class MemberController {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.debug("비밀번호 변경 에러 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<Map<String, Object>>(resultMap, status);
+		}
+	}
+	
+	// 한재현 추가
+	@ApiOperation(value = "아이디 중북을 확인한다.", notes = "아이디 중복 검사", response = Map.class)
+	@GetMapping("/exist/{userId}")
+	public ResponseEntity<?> duplicateCheck(
+			@RequestBody @PathVariable ("userId") @ApiParam(value = "로그아웃할 회원의 아이디.", required = true) String userId) {
+		System.out.println("전달받은 userID: " + userId);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			int count = memberService.duplicateCheck(userId);
+			
+			if(count == 0) {
+				// 중복이 없으면 CREATED 리턴
+				return new ResponseEntity<Void>(HttpStatus.CREATED);
+			} else {
+				// 중복이 있으면 OK 리턴
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			log.debug("중복 검사 에러 : {}", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 			return new ResponseEntity<Map<String, Object>>(resultMap, status);

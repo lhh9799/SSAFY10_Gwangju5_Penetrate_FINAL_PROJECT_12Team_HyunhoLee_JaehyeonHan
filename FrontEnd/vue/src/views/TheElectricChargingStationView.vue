@@ -22,7 +22,6 @@ const param = ref({
 });
 
 onMounted(() => {
-  // getChargingStations();
   getSidoList();
 });
 

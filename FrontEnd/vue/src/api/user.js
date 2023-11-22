@@ -38,4 +38,18 @@ async function modifyPassword(modifyPwd, success, fail) {
   await local.post(`/user/modify`, modifyPwd).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, check, modifyPassword };
+async function duplicate(userId, success, fail) {
+  await local.get(`/user/exist/${userId}`).then(success).catch(fail);
+}
+
+export {
+  userConfirm,
+  findById,
+  tokenRegeneration,
+  logout,
+  join,
+  withdraw,
+  check,
+  modifyPassword,
+  duplicate,
+};

@@ -12,6 +12,7 @@ import {
   withdraw,
   check,
   modifyPassword,
+  duplicate,
 } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
@@ -214,6 +215,25 @@ export const useMemberStore = defineStore("memberStore", () => {
     );
   };
 
+  const duplicateId = async (userInput) => {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        duplicate(userInput, resolve, reject);
+      });
+
+      if (response.status === httpStatusCode.CREATE) {
+        console.log("중복된 ID가 없음");
+        return httpStatusCode.CREATE;
+      } else {
+        console.log("중복된 ID가 있음");
+        return httpStatusCode.OK;
+      }
+    } catch (error) {
+      console.log(error);
+      return httpStatusCode.error;
+    }
+  };
+
   return {
     isLogin,
     isLoginError,
@@ -227,6 +247,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     userWithdraw,
     checkPwd,
     userModifyPwd,
+    duplicateId,
   };
   // {
   //   persist: {

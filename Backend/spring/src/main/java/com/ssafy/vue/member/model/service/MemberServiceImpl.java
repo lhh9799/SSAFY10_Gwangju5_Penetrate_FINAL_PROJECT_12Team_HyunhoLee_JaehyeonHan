@@ -72,4 +72,8 @@ public class MemberServiceImpl implements MemberService {
 		memberMapper.updatePwd(newPwd);
 	}
 
+	@Override
+	public int duplicateCheck(String userId) throws SQLException {
+		return memberMapper.duplicateCheck(userId);}
+
 }

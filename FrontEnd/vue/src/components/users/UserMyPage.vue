@@ -14,7 +14,7 @@ const showWithdraw = ref(false);
 
 onMounted(async () => {
   const { userInfo: userInfoData } = storeToRefs(memberStore);
-  await userInfoData;
+  userInfoData;
   userInfo.value = userInfoData.value;
 });
 </script>
@@ -52,9 +52,7 @@ onMounted(async () => {
           <button type="button" class="btn btn-outline-secondary mt-2" @click="showModify = true">
             비밀번호 변경
           </button>
-          <Modify v-if="showModify" @close="showModify = false">
-            <h3 slot="header">모달 창 제목</h3>
-          </Modify>
+          <Modify v-if="showModify" @close="showModify = false"> </Modify>
           <div>
             <button
               type="button"
