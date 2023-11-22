@@ -10,6 +10,24 @@
           <li v-for="location in props.selectedItineraries" :key="location.contentId">
             {{ location.title }}
           </li>
+
+          <h3>hi1</h3>
+          <draggable 
+          :list="props.selectedItineraries"
+          item-key="name"
+          class="list-group"
+          ghost-class="ghost"
+          @start="dragging = true"
+          @end="dragging = false"
+          >
+          
+          <template #item="{ element }">
+            <li class="list-group-item">
+              {{ element.title }}
+            </li>
+          </template>
+          <h3>hi</h3>
+          </draggable>
         </ul>
       </div>
     </div>
@@ -45,9 +63,23 @@
 </style>
 
 <script setup>
-import { defineProps } from 'vue';
+import { ref, defineProps } from 'vue';
+import draggable from "vuedraggable";
 
 const props = defineProps({ selectedItineraries: Array });
+
+const order = ref(1);
+// const glister = ref([1, 2, 3, 4, 5]);
+// const glister = ref(['a', 'b', 'c']);
+const glister = ['a', 'b', 'c'];
+const test = ref('a');
+const people = 1;
+
+// setTimeout(() => {
+//   glister.value.push('d');
+//   glister.value.push('e');
+//   glister.value.push('f');
+// }, 1000);
 
 const save = () => {
   console.log('save 버튼 클릭됨');
