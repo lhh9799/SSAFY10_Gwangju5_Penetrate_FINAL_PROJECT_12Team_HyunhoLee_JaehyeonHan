@@ -220,68 +220,69 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
 <template>
     <div class="container text-center mt-3">
         <div class="alert alert-success" role="alert">여행지 정보</div>
-        <div class="row mb-2">
-            <div class="col d-flex flex-row-reverse">
-                <VSelect :selectOption="sidoList" @onKeySelect="onChangeSido" />
-            </div>
-            <div class="col">
-                <VSelect :selectOption="gugunList" @onKeySelect="onChangeGugun" />
-            </div>
-        </div>
-        <div class="col d-flex flex-row-reverse">
-                
-        </div>
+        <div class='content'>
+            <div class='left-area'>
+                <div class="row mb-2">
+                    <div class="col d-flex flex-row-reverse">
+                        <VSelect :selectOption="sidoList" @onKeySelect="onChangeSido" />
+                    </div>
+                    <div class="col">
+                        <VSelect :selectOption="gugunList" @onKeySelect="onChangeGugun" />
+                    </div>
+                </div>
+                <div class="col d-flex flex-row-reverse">
+                </div>
 
-        <!-- 관광지 유형 옵션 (checkbox) -->
-        <!-- 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점 -->
-        <div id='attraction-options-div' >
-            <template v-for='item in attractionType'>
-                <input type='checkbox' :value='item.key' :id='item.value' class='attraction-options' @change='onChangeCheckbox' v-model='mapSelectedAttractionType'>
-                <label :for='item.value' class='attraction-options'>{{ item.value }}</label>
-            </template>
+                <!-- 관광지 유형 옵션 (checkbox) -->
+                <!-- 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점 -->
+                <div id='attraction-options-div' >
+                    <template v-for='item in attractionType'>
+                        <input type='checkbox' :value='item.key' :id='item.value' class='attraction-options' @change='onChangeCheckbox' v-model='mapSelectedAttractionType'>
+                        <label :for='item.value' class='attraction-options'>{{ item.value }}</label>
+                    </template>
 
-            <!-- 전체 선택, 전채 선택 해제 버튼 -->
-            <div class='checkbox-buttons'>
-                <button class="btn btn-outline-success" type="button" id='deselect-all' @click='selectAllAttractionType'>전체 선택</button>
-                <button class="btn btn-outline-primary" type="button" id='deselect-all' @click='deselectAllAttractionType'>전체 선택 해제</button>
+                    <!-- 전체 선택, 전채 선택 해제 버튼 -->
+                    <div class='checkbox-buttons'>
+                        <button class="btn btn-outline-success" type="button" id='deselect-all' @click='selectAllAttractionType'>전체 선택</button>
+                        <button class="btn btn-outline-primary" type="button" id='deselect-all' @click='deselectAllAttractionType'>전체 선택 해제</button>
+                    </div>
+                </div>
+
+                <div>
+                    <AttractionKakaoMap :attractionInfoList='attractionInfoList' :selectAttraction='selectAttraction' />
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="text-center">
+                                <th scope="col">이미지</th>
+                                <th scope="col">관광지 유형</th>
+                                <th scope="col">관광지 명</th>
+                                <th scope="col">시/도</th>
+                                <!-- <th scope="col">구/군</th> -->
+                                <th scope="col">주소</th>
+                                <th scope="col">일정에 추가</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType" @click="viewAttractionInfoList(attractionInfo)">
+                                <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
+                                <td>{{ attractionTypeMap.get(attractionInfo.contentTypeId) }}</td>
+                                <td>{{ attractionInfo.title }}</td>
+                                <td>{{ sidoTypeMap.get(attractionInfo.sidoCode) }}</td>
+                                <!-- <td>{{ attractionInfo.gugunCode }}</td> -->
+                                <td>{{ attractionInfo.addr1 }}</td>
+                                <!-- 아래는 삭제 필요 -->
+                                <td>{{ attractionInfo.contentId }}</td>
+                                <!-- 아래는 수정 중 (완료 X) -->
+                                <td><input type='checkbox' :value='attractionInfo.content_id' :id='"ch" + attractionInfo.value' class='attraction-options' @change='onChangeItineraryCheckbox(attractionInfo)' v-model='itinerarySelectedAttraction'></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='right-area'>
+                <TheItineraryView></TheItineraryView>
             </div>
         </div>
-
-        <div>
-            <AttractionKakaoMap :attractionInfoList='attractionInfoList' :selectAttraction='selectAttraction' />
-            <table class="table table-hover">
-                <thead>
-                    <tr class="text-center">
-                        <th scope="col">이미지</th>
-                        <th scope="col">관광지 유형</th>
-                        <th scope="col">관광지 명</th>
-                        <th scope="col">시/도</th>
-                        <!-- <th scope="col">구/군</th> -->
-                        <th scope="col">주소</th>
-                        <th scope="col">일정에 추가</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType" @click="viewAttractionInfoList(attractionInfo)">
-                        <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
-                        <td>{{ attractionTypeMap.get(attractionInfo.contentTypeId) }}</td>
-                        <td>{{ attractionInfo.title }}</td>
-                        <td>{{ sidoTypeMap.get(attractionInfo.sidoCode) }}</td>
-                        <!-- <td>{{ attractionInfo.gugunCode }}</td> -->
-                        <td>{{ attractionInfo.addr1 }}</td>
-                        <!-- 아래는 삭제 필요 -->
-                        <td>{{ attractionInfo.contentId }}</td>
-                        <!-- 아래는 수정 중 (완료 X) -->
-                        <td><input type='checkbox' :value='attractionInfo.content_id' :id='"ch" + attractionInfo.value' class='attraction-options' @change='onChangeItineraryCheckbox(attractionInfo)' v-model='itinerarySelectedAttraction'></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div>
-        <TheItineraryView></TheItineraryView>
-        TheItineraryView.vue
-        <h1>내비바</h1>
     </div>
 </template>
 
@@ -309,5 +310,18 @@ mark.purple {
     vertical-align: middle;
     margin-top: 1%;
     margin-bottom: 1%;
+}
+
+.content {
+    display: flex;
+    /* flex-wrap: wrap; */
+}
+
+.left-area {
+    flex: 3;
+}
+
+.right-area {
+    flex: 1;
 }
 </style>
