@@ -75,12 +75,6 @@ const logout = () => {
           <li class="nav-item">
             <router-link :to="{ name: 'estations' }" class="nav-link">전기차충전소</router-link>
           </li>
-          <!-- 이현호 테스트 Vue Draggable -->
-          <li class="nav-item">
-            <router-link :to="{ name: 'draggable' }" class="nav-link"
-              >Vue 3 Draggable 테스트</router-link
-            >
-          </li>
           <!-- 이현호 테스트 여행지 정보 -->
           <li class="nav-item">
             <router-link :to="{ name: 'map' }" class="nav-link">여행지 지도 테스트</router-link>

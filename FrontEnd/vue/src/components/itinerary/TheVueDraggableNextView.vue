@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="row">
     <div class="col-2">
       <button class="btn btn-secondary button" @click="sort">
@@ -112,4 +112,4 @@ export default {
 .list-group-item i {
   cursor: pointer;
 }
-</style>
+</style> -->
