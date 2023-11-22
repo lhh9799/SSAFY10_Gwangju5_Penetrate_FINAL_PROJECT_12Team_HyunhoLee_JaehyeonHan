@@ -9,47 +9,100 @@
         <p>여행 일정을 계획해보세요</p>
 
         <h1>커스텀 탭</h1>
-        <!-- <template v-for=''> -->
-        <template>
-          <div class='my-tab-style'>
-            안녕
-          </div>
-        </template>
-
-        <h1>hi</h1>
-        <div>
-            <tabs>
-                <tab name="First tab">
-                    First tab content
-                </tab>
-                <tab name="Second tab">
-                    Second tab content
-                </tab>
-                <tab name="Third tab">
-                    Third tab content
-                </tab>
-            </tabs>
+        <div class='day-tabs-div'>
+            <button class='my-tab-style' :value='index' v-for="index in userTravelDays" :key="index" @click='onTravelDayTabClick'>
+              {{ index }}
+            </button>
         </div>
 
-        <!-- <template v-for='day in days'>
-          <div>
-            <p>{{ day }}일차</p>
+        <div class='user-itinerary-content-div'>
+          <div v-if='displayUserItinerary.length > 0'>
+            <!-- <draggable :list="props.selectedItineraries" item-key="name" class="list-group" ghost-class="ghost" @start="dragging = true" @end="dragging = false" > -->
+            <draggable :list="displayUserItinerary" item-key="name" class="list-group" ghost-class="ghost" @start="dragging = true" @end="dragging = false" >
+        
+          <template #item="{ element }">
+            <li class="list-group-item">
+              {{ element.place }}
+            </li>
+          </template>
+          </draggable>
           </div>
-        </template> -->
-
-        <draggable :list="props.selectedItineraries" item-key="name" class="list-group" ghost-class="ghost" @start="dragging = true" @end="dragging = false" >
-        
-        <template #item="{ element }">
-          <li class="list-group-item">
-            {{ element.title }}
-          </li>
-        </template>
-        </draggable>
-        
+        </div>
       </div>
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, defineProps, onMounted } from 'vue';
+import draggable from "vuedraggable";
+import {Tabs, Tab} from 'vue3-tabs-component';
+import { registerPlan, getPlan } from "@/api/user";
+
+const props = defineProps({ selectedItineraries: Array });
+const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
+const userId = memberStoreData.userInfo.userId;
+var userItinerary = ref([]);
+var displayUserItinerary = ref([]); //클릭한 버튼에 맞는 일자의 여행 계획 (예: 1일차, 2일차 등)
+// var userItinerary = ref({});
+var userTravelDays = ref(1);        //로그인한 사용자의 최대 여행 일수
+
+const onTravelDayTabClick = ($event) => {
+  // console.log($event);
+  // console.log($event.currentTarget);
+  console.log($event.currentTarget.value);
+  let pressedButtonValue = $event.currentTarget.value;  //사용자가 선택한 여행 일 (예: 1일차, 2일차 등)
+  console.log('pressedButtonValue: ' + pressedButtonValue);
+
+  //기존 여행 계획 초기화
+  displayUserItinerary.value = [];
+
+  //클릭한 버튼에 맞는 일자의 여행 계획을 배열에 추가
+  userItinerary.value.forEach((item) => {
+    if(item.day == pressedButtonValue) {
+      displayUserItinerary.value.push(item);
+    }
+  });
+
+  console.log('displayUserItinerary.value');
+  console.log(displayUserItinerary.value);
+};
+
+const save = () => {
+  console.log('save 버튼 클릭됨');
+}
+
+//DB에 저장된 여행 계획과 메뉴에서 선택한 여행 계획을 합치는 함수
+const unifyItineraries = () => {
+  props.selectedItineraries.forEach((item) => {
+    displayUserItinerary.value.push(item);
+  });
+};
+
+onMounted(() => {
+  console.log('userId');
+  console.log(userId);
+
+  getPlan(
+    userId,
+    ({data}) => {
+      userItinerary.value.maxDays = 1;
+      data.forEach(element => {
+        //로그인한 사용자의 최대 여행 일수 계산
+        userTravelDays.value = Math.max(userTravelDays.value, element.day);
+      });
+
+      userItinerary.value = data;
+    },
+    (error) => {
+      console.log('getPlan - error');
+    },
+  );
+
+  //DB에 저장된 여행 계획과 메뉴에서 선택한 여행 계획을 합치는 함수
+  unifyItineraries();
+});
+</script>
 
 <style scoped>
 .sidebar {
@@ -81,60 +134,19 @@
   align-self: flex-end;
 }
 
+.day-tabs-div {
+  display: flex;
+  flex-direction: row;
+}
 .my-tab-style {
   border: 1px solid black;
   border-radius: 5px;
+  width: 100%;
+  /* max-width: 100%; */
+  display: block;
 }
 
+.user-itinerary-content-div {
+  border: 3px solid aquamarine;
+}
 </style>
-
-<script setup>
-import { ref, defineProps, onMounted } from 'vue';
-import draggable from "vuedraggable";
-import {Tabs, Tab} from 'vue3-tabs-component';
-import { useMemberStore } from "@/stores/member";
-import { registerPlan, getPlan } from "@/api/user";
-
-const props = defineProps({ selectedItineraries: Array });
-const { getUserInfo } = useMemberStore();
-const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
-const day = ref(1);
-const days = ref(3);
-const userId = memberStoreData.userInfo.userId;
-var userItinerary = ref([]);
-// var userItinerary = ref({});
-var userTravelDays = ref(1);
-
-const save = () => {
-  console.log('save 버튼 클릭됨');
-}
-
-onMounted(() => {
-  console.log('userId');
-  console.log(userId);
-
-  getPlan(
-    userId,
-    ({data}) => {
-      console.log('getPlan - data');
-      console.log(data);
-      userItinerary.value.maxDays = 1;
-      data.forEach(element => {
-        console.log('element');
-        console.log(element);
-        console.log(element.day);
-
-        userTravelDays.value = Math.max(userTravelDays.value, element.day);
-      });
-
-      userItinerary.value = data;
-      console.log('userTravelDays.value');
-      console.log(userTravelDays.value);
-    },
-    (error) => {
-      console.log('getPlan - error');
-    },
-  );
-});
-
-</script>
