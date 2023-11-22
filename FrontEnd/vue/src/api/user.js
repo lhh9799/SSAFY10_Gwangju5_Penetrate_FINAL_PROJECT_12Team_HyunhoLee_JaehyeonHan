@@ -38,8 +38,8 @@ async function modifyPassword(modifyPwd, success, fail) {
   await local.post(`/user/modify`, modifyPwd).then(success).catch(fail);
 }
 
-async function registerPlan(itineraryDto, success, fail) {
-  await local.post(`/user/plan`, itineraryDto).then(success).catch(fail);
+async function registPlan(itineraryDto, success, fail) {
+  await local.post(`/user/plan`, JSON.stringify(itineraryDto)).then(success).catch(fail);
 }
 
 async function getPlan(userId, success, fail) {
@@ -48,4 +48,4 @@ async function getPlan(userId, success, fail) {
   await local.get(`/user/plan/${userId}`, userId).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, check, modifyPassword, registerPlan, getPlan };
+export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, check, modifyPassword, registPlan, getPlan };

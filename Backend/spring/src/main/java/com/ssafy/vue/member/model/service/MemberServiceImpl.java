@@ -84,4 +84,9 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.getPlan(userId);
 	}
 
+	@Override
+	public void deleteOneDayPlan(Map<String, Object> map) throws SQLException {
+		memberMapper.deleteOneDayPlan(map);
+	}
+
 }

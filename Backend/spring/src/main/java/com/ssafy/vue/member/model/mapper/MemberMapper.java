@@ -30,4 +30,6 @@ public interface MemberMapper {
 	void registPlan(ItineraryDto itineraryDto) throws SQLException;
 	//이현호 추가
 	List<ItineraryDto> getPlan(String userId) throws SQLException;
+	//이현호 추가
+	void deleteOneDayPlan(Map<String, Object> map) throws SQLException;
 }

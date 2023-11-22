@@ -2,6 +2,7 @@ package com.ssafy.vue.member.model.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.ssafy.vue.member.model.ItineraryDto;
 import com.ssafy.vue.member.model.MemberDto;
@@ -26,4 +27,6 @@ public interface MemberService {
 	void registPlan(ItineraryDto itineraryDto) throws SQLException;
 	//이현호 추가
 	List<ItineraryDto> getPlan(String userId) throws SQLException;
+	//이현호 추가
+	void deleteOneDayPlan(Map<String, Object> map) throws SQLException;
 }

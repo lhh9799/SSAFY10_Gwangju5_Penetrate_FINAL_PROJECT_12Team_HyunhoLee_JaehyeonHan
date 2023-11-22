@@ -9,13 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.vue.board.model.BoardDto;
 import com.ssafy.vue.member.model.IdAndPwdDto;
 import com.ssafy.vue.member.model.ItineraryDto;
 import com.ssafy.vue.member.model.MemberDto;
@@ -231,20 +234,43 @@ public class MemberController {
 	@ApiOperation(value = "여행 계획 등록", notes = "여행 계획 등록")
 	@PostMapping("/plan")
 	public ResponseEntity<Map<String, Object>> registPlan(
-			@RequestBody @ApiParam(value = "여행 계획", required = true) ItineraryDto itineraryDto) {
-		log.debug("registPlan ItineraryDto : {}", itineraryDto);
+			@RequestBody @ApiParam(value = "여행 계획", required = true) List<ItineraryDto> itineraryDtoList) {
+		System.out.println("registPlan itineraryDto 받은 매개변수: " + itineraryDtoList);
+		log.debug("registPlan ItineraryDto : {}", itineraryDtoList);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
+		
 		try {
-			memberService.registPlan(itineraryDto);
+			String userId = null;
+			int day = -1;
+
+			if(!itineraryDtoList.isEmpty()) {
+				userId = itineraryDtoList.get(0).getUserId();
+				day = itineraryDtoList.get(0).getDay();
+				
+				Map<String, Object> map = new HashMap<>();
+				map.put("userId", userId);
+				map.put("day", day);
+				
+				memberService.deleteOneDayPlan(map);
+				for(ItineraryDto itineraryDto : itineraryDtoList) {
+					memberService.registPlan(itineraryDto);
+				}
+				
+				return ResponseEntity.ok().build();
+			} else {
+				return ResponseEntity.badRequest().build();
+			}
 		} catch (Exception e) {
 			log.debug("여행 계획 등록 에러 발생 : {}", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
+	//이현호 추가
 	@ApiOperation(value = "여행 계획 조회", notes = "여행 계획 조회 정보를 담은 Dto을 반환한다.", response = Map.class)
 	@GetMapping("/plan/{userId}")
 //	public ResponseEntity<Map<String, Object>> getPlan(
@@ -258,5 +284,47 @@ public class MemberController {
 		
 		return new ResponseEntity<List<ItineraryDto>>(memberService.getPlan(userId), HttpStatus.OK);
 	}
+	
+	//이현호 추가
+	//여행 계획 등록과 합쳐짐
+	@ApiOperation(value = "여행 계획 수정", notes = "수정할 여행 정보를 입력한다.", response = String.class)
+	@PutMapping
+	public ResponseEntity<String> modifyPlan(
+			@RequestBody @ApiParam(value = "수정할 글정보.", required = true) List<ItineraryDto> itineraryDtoList) throws Exception {
+		log.info("modifyPlan - 호출 {}", itineraryDtoList);
+		
+		String userId = null;
+		int day = -1;
+
+		if(!itineraryDtoList.isEmpty()) {
+			userId = itineraryDtoList.get(0).getUserId();
+			day = itineraryDtoList.get(0).getDay();
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("userId", userId);
+			map.put("day", day);
+			
+			memberService.deleteOneDayPlan(map);
+			for(ItineraryDto itineraryDto : itineraryDtoList) {
+				memberService.registPlan(itineraryDto);
+			}
+			
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+//	//이현호 추가
+//	@ApiOperation(value = "하루의 여행 계획 삭제", notes = "하루의 여행 계획 정보를 삭제한다.", response = String.class)
+//	@DeleteMapping("/plan")
+//	public ResponseEntity<String> deleteOneDayPlan(
+//			@RequestBody @ApiParam(value = "Map (삭제할 회원의 아이디, 일차 (예: 1일차, 2일차))", required = true) Map<String, Object> map) throws Exception {
+//		log.info("deleteOneDayPlan - 호출");
+//		System.out.println("deleteOneDayPlan map 호출: " + map);
+//		memberService.deleteOneDayPlan(map);
+//		
+//		return ResponseEntity.ok().build();
+//	}
 	
 }

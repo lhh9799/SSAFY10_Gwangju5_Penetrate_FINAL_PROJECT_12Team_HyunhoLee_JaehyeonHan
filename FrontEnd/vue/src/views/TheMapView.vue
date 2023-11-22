@@ -214,6 +214,9 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
             selectedItineraries.value.splice(index, 1);
         }
     }
+
+    // console.log('반응형 변수 변경');
+    // console.log(selectedItineraries.value);
 };
 
 //삭제 가능

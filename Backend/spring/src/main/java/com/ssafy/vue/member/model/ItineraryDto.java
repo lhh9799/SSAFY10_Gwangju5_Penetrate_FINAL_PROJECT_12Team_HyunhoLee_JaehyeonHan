@@ -3,7 +3,7 @@ package com.ssafy.vue.member.model;
 public class ItineraryDto {
 	private String userId;
 	private int day;
-	private String place;
+	private String title;
 	private int contentId;
 	private String addr;
 	private double latitude;
@@ -26,12 +26,12 @@ public class ItineraryDto {
 		this.day = day;
 	}
 
-	public String getPlace() {
-		return place;
+	public String gettitle() {
+		return title;
 	}
 
-	public void setPlace(String place) {
-		this.place = place;
+	public void settitle(String title) {
+		this.title = title;
 	}
 
 	public int getContentId() {
@@ -76,7 +76,7 @@ public class ItineraryDto {
 
 	@Override
 	public String toString() {
-		return "ItineraryDto [userId=" + userId + ", day=" + day + ", place=" + place + ", contentId=" + contentId
+		return "ItineraryDto [userId=" + userId + ", day=" + day + ", title=" + title + ", contentId=" + contentId
 				+ ", addr=" + addr + ", latitude=" + latitude + ", longtitude=" + longtitude + ", sequence=" + sequence
 				+ "]";
 	}
