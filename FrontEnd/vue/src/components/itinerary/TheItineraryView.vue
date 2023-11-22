@@ -101,6 +101,9 @@ const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
 const day = ref(1);
 const days = ref(3);
 const userId = memberStoreData.userInfo.userId;
+var userItinerary = ref([]);
+// var userItinerary = ref({});
+var userTravelDays = ref(1);
 
 const save = () => {
   console.log('save 버튼 클릭됨');
@@ -115,10 +118,22 @@ onMounted(() => {
     ({data}) => {
       console.log('getPlan - data');
       console.log(data);
+      userItinerary.value.maxDays = 1;
+      data.forEach(element => {
+        console.log('element');
+        console.log(element);
+        console.log(element.day);
+
+        userTravelDays.value = Math.max(userTravelDays.value, element.day);
+      });
+
+      userItinerary.value = data;
+      console.log('userTravelDays.value');
+      console.log(userTravelDays.value);
     },
     (error) => {
       console.log('getPlan - error');
-    }
+    },
   );
 });
 
