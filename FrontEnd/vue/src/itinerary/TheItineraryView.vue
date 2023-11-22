@@ -10,6 +10,8 @@
           <li v-for="location in props.selectedItineraries" :key="location.contentId">
             {{ location.title }}
           </li>
+          <!-- <myDraggableNext></myDraggableNext> -->
+          <aaa></aaa>
         </ul>
       </div>
     </div>
@@ -46,11 +48,16 @@
 
 <script setup>
 import { defineProps } from 'vue';
+// import { VueDraggableNext } from 'vue-draggable-next'
+// import defineComponent from '@/components/itinerary/TheVueDraggableNextView.vue'
+import aaa from '@/components/itinerary/TheVueDraggableNextView.vue'
 
 const props = defineProps({ selectedItineraries: Array });
 
 const save = () => {
   console.log('save 버튼 클릭됨');
 }
+
+aaa.data = ['hi', 'hello', 'bonjour'];
 
 </script>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { listAttraction, getSidoFromSidoTable, getgugunDtoFromSidoTable } from "@/api/map";
 
 import AttractionKakaoMap from "@/components/common/AttractionKakaoMap.vue";
@@ -18,9 +18,8 @@ var attractionInfoList = ref([]);                   //관광지 유형 조건에
 const selectAttraction = ref({});                   //테이블에서 선택한 관광지 1개의 정보
 const attractionTypeMap = new Map();                //관광지 유형 코드로 문자열을 얻어오기 위한 Map
 const sidoTypeMap = new Map();                      //시/도 코드로 해당 지역 문자열을 얻어오기 위한 Map
-const mapSelectedAttractionType = ref([]);          //(테이블의 행) checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', }) -> 지도 출력
-const itinerarySelectedAttraction = ref([]);        //(여행 일정) checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', }) -> 사이드바에 출력
-const selectedItineraries = ref([]);                //checkbox의 선택된 관광지 (여행 계획)들을 저장하는 배열 (예: @/util/attraction-type.js의 sampleSelectedItineraries)
+const mapSelectedAttractionType = ref([]);          //(테이블의 행) checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', }) -> 지도 출력 #@/util/attraction-type.js의 sampleSelectedItineraries)
+const selectedItineraries = ref([]);                //(여행 일정) checkbox의 선택된 관광지 유형들을 저장하는 배열 (예: { key: 12, value: '관광지', }) -> 사이드바에 출력 #@/util/attraction-type.js의 sampleSelectedItineraries)
 
 const param = ref({
     // serviceKey: VITE_OPEN_API_SERVICE_KEY,
@@ -203,33 +202,28 @@ const deselectAllAttractionType = () => {
 };
 
 const onChangeItineraryCheckbox = (attractionInfo) => {
-    // console.log('attractionInfo');
-    // console.log(attractionInfo);
+    if (attractionInfo.isSelected) {
+        //객체 복사 필요할 듯!
+        selectedItineraries.value.push(JSON.parse(JSON.stringify(attractionInfo)));
+    } else {
+        const index = selectedItineraries.value.findIndex(
+            (item) => item.contentType === attractionInfo.contentType
+        );
 
-    // console.log('attractionInfo.isSelected');
-    // console.log(attractionInfo.isSelected);
-
-    console.log('itinerarySelectedAttraction.value');
-    console.log(itinerarySelectedAttraction.value);
-
-    console.log('selectedItineraries');
-    console.log(selectedItineraries);
-
-    // if (attractionInfo.isSelected) {
-    //     //객체 복사 필요할 듯!
-    //     selectedItineraries.value.push(JSON.parse(JSON.stringify(attractionInfo)));
-    // } else {
-    //     const index = selectedItineraries.value.findIndex(
-    //         (item) => item.contentType === attractionInfo.contentType
-    //     );
-    //     console.log('item');
-    //     console.log(item);
-            
-    //     if (index !== -1) {
-    //         selectedItineraries.value.splice(index, 1);
-    //     }
-    // }
+        if (index !== -1) {
+            selectedItineraries.value.splice(index, 1);
+        }
+    }
 };
+
+//삭제 가능
+// watch(
+//     () => selectedItineraries.value,
+//     (value) => {
+//         console.log('value');
+//         console.log(value);
+//     }
+// );
 </script>
 
 <template>
@@ -272,32 +266,33 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
                                 <th scope="col">관광지 유형</th>
                                 <th scope="col">관광지 명</th>
                                 <th scope="col">시/도</th>
-                                <!-- <th scope="col">구/군</th> -->
                                 <th scope="col">주소</th>
                                 <th scope="col">일정에 추가</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType" @click="viewAttractionInfoList(attractionInfo)">
+                            <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType"> -->
                                 <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
                                 <td>{{ attractionTypeMap.get(attractionInfo.contentTypeId) }}</td>
                                 <td>{{ attractionInfo.title }}</td>
                                 <td>{{ sidoTypeMap.get(attractionInfo.sidoCode) }}</td>
-                                <!-- <td>{{ attractionInfo.gugunCode }}</td> -->
                                 <td>{{ attractionInfo.addr1 }}</td>
                                 <!-- 아래는 수정 중 (완료 X) -->
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' class='attraction-options' @change='onChangeItineraryCheckbox(attractionInfo)' v-model='itinerarySelectedAttraction'></td> -->
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' class='attraction-options' @change='onChangeItineraryCheckbox' v-model='itinerarySelectedAttraction'></td> -->
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' class='attraction-options' v-model='itinerarySelectedAttraction'></td> -->
-                                <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @change='onChangeItineraryCheckbox' class='attraction-options'></td>
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' class='attraction-options'></td> -->
+                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @click='onChangeItineraryCheckbox(attractionInfo, $event)' class='attraction-options'></td> -->
+                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @click='onChangeItineraryCheckbox(attractionInfo, $event)' v-model='attractionInfo.isSelected' class='attraction-options'></td> -->
+                                <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @change='onChangeItineraryCheckbox(attractionInfo)' v-model='attractionInfo.isSelected' class='attraction-options'></td>
+
+                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @click='onChangeItineraryCheckbox(attractionInfo)' v-model='selectedItineraries' class='attraction-options'></td> -->
+                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' v-model='selectedItineraries' @change='onChangeItineraryCheckbox()' class='attraction-options'></td> -->
+                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' v-model='selectedItineraries' class='attraction-options'></td> -->
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class='right-area'>
-                <TheItineraryView></TheItineraryView>
+                <TheItineraryView :selectedItineraries='selectedItineraries'></TheItineraryView>
             </div>
         </div>
     </div>
@@ -340,5 +335,7 @@ mark.purple {
 
 .right-area {
     flex: 1;
+    padding-left: 5%;
+    height: 1000px;
 }
 </style>
