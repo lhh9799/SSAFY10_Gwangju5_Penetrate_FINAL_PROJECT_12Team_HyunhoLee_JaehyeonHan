@@ -32,4 +32,6 @@ public interface MemberMapper {
 	List<ItineraryDto> getPlan(String userId) throws SQLException;
 	//이현호 추가
 	void deleteOneDayPlan(Map<String, Object> map) throws SQLException;
+	//한재현 추가
+	int duplicateCheck(String userId) throws SQLException;
 }

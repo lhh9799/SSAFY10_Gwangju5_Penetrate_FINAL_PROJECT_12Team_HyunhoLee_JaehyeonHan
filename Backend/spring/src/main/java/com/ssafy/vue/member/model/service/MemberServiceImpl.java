@@ -88,5 +88,7 @@ public class MemberServiceImpl implements MemberService {
 	public void deleteOneDayPlan(Map<String, Object> map) throws SQLException {
 		memberMapper.deleteOneDayPlan(map);
 	}
+	public int duplicateCheck(String userId) throws SQLException {
+		return memberMapper.duplicateCheck(userId);}
 
 }

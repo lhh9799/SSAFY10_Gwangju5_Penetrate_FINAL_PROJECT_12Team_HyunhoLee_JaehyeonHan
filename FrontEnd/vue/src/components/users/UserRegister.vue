@@ -3,11 +3,14 @@ import { ref, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
 
+import CheckDuplicateId from "./CheckDuplicateId.vue";
+
 const memberStore = useMemberStore();
 const { userJoin } = memberStore;
 const router = useRouter();
 
 const focusDesignator = ref();
+const showModify = ref(false);
 
 const joinUser = ref({
   userId: "",
@@ -25,7 +28,6 @@ async function onSubmit() {
   } else if (!joinUser.value.emailDomain) {
     alert("이메일 도메인을 입력해주세요!");
   } else {
-    //API 호출
     await userJoin(JSON.stringify(joinUser.value));
     router.replace("/");
   }
@@ -35,6 +37,15 @@ onMounted(async () => {
   await nextTick();
   focusDesignator.value.focus();
 });
+
+const handleTransferId = (transferredTempId) => {
+  if (transferredTempId === null) {
+    showModify.value = false;
+  } else {
+    joinUser.value.userId = transferredTempId;
+    showModify.value = false;
+  }
+};
 </script>
 
 <template>
@@ -61,14 +72,31 @@ onMounted(async () => {
           </div>
           <div class="mb-3">
             <label for="userid" class="form-label">아이디 : </label>
-            <input
-              type="text"
-              class="form-control"
-              id="userid"
-              placeholder="아이디..."
-              required="required"
-              v-model="joinUser.userId"
-            />
+            <div class="mb-11">
+              <input
+                type="text"
+                class="form-control"
+                id="userid"
+                placeholder="아이디..."
+                required="required"
+                v-model="joinUser.userId"
+                readonly
+              />
+              <button
+                type="button"
+                class="btn btn-outline-secondary mt-2"
+                @click="showModify = true"
+              >
+                아이디 중복 체크
+              </button>
+            </div>
+
+            <CheckDuplicateId
+              v-if="showModify"
+              @close="showModify = false"
+              @transferId="handleTransferId"
+            >
+            </CheckDuplicateId>
           </div>
           <div class="mb-3">
             <label for="userpwd" class="form-label">비밀번호 : </label>
@@ -128,4 +156,12 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.mb-11 {
+  display: flex;
+}
+
+.form-control {
+  margin-right: 20px;
+}
+</style>

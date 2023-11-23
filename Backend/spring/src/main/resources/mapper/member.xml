@@ -109,4 +109,11 @@
 		DELETE FROM itinerary
 		WHERE user_id = #{userId} AND day = #{day}
 	</update>
+
+	<!-- 한재현 추가 -->
+	<select id="duplicateCheck" parameterType="String">
+		select count(*)
+		from members
+		where user_id = #{userId}
+	</select>
 </mapper>

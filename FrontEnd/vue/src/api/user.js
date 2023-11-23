@@ -47,3 +47,19 @@ async function getPlan(userId, success, fail) {
 }
 
 export { userConfirm, findById, tokenRegeneration, logout, join, withdraw, check, modifyPassword, registPlan, getPlan };
+
+async function duplicate(userId, success, fail) {
+  await local.get(`/user/exist/${userId}`).then(success).catch(fail);
+}
+
+export {
+  userConfirm,
+  findById,
+  tokenRegeneration,
+  logout,
+  join,
+  withdraw,
+  check,
+  modifyPassword,
+  duplicate,
+};

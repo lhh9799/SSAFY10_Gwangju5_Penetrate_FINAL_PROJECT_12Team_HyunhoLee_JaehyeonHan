@@ -3,8 +3,9 @@ User
 import { ref, onMounted } from "vue";
 
 const myCanvas = ref(null);
-const menuAdd = ref("");
-const product = ref(["햄버거", "순대국", "정식당", "중국집", "구내식당"]);
+const tripAdd = ref("");
+const tripDelete = ref("");
+const product = ref(["다시돌려!"]);
 const colors = ref([
   "#55efc4",
   "#81ecec",
@@ -15,7 +16,6 @@ const colors = ref([
   "#00cec9",
   "#0984e3",
   "#6c5ce7",
-  "#b2bec3",
   "#ffeaa7",
   "#fab1a0",
   "#ff7675",
@@ -93,13 +93,31 @@ const stopRotate = () => {
 };
 
 const add = () => {
-  if (menuAdd.value !== undefined && menuAdd.value !== "") {
-    product.value.push(menuAdd.value);
-    colors.value.push(colors.value.shift()); // Move the first color to the end for a rotating effect
+  if (!(product.value.indexOf(tripAdd.value) == -1)) {
+    alert("이미 룰렛에 있는 여행지입니다!");
+  } else if (tripAdd.value !== undefined && tripAdd.value !== "") {
+    product.value.push(tripAdd.value);
+    colors.value.push(colors.value.shift());
     newMake();
-    menuAdd.value = "";
+    tripAdd.value = "";
   } else {
-    alert("메뉴를 입력한 후 버튼을 클릭 해 주세요");
+    alert("여행지를 입력한 후 버튼을 클릭 해 주세요");
+  }
+};
+
+const drop = () => {
+  if (tripDelete.value !== undefined && tripDelete.value !== "") {
+    console.log(tripDelete.value);
+    const indexToRemove = product.value.indexOf(tripDelete.value);
+    if (indexToRemove !== -1) {
+      product.value.splice(indexToRemove, 1);
+      newMake();
+      tripDelete.value = "";
+    } else {
+      alert("룰렛에 없는 여행지입니다!");
+    }
+  } else {
+    alert("여행지를 입력한 후 버튼을 클릭 해 주세요");
   }
 };
 
@@ -110,11 +128,15 @@ onMounted(newMake);
   <div id="menu">
     <div class="roulette-pin"></div>
     <canvas ref="myCanvas" width="600" height="600"></canvas>
-    <button @click="rotate">START</button>
-    <button @click="stopRotate">STOP</button>
+    <div>
+      <button class="button-with-space" @click="rotate">START</button>
+      <button class="button-with-space" @click="stopRotate">STOP</button>
+    </div>
     <div id="addDiv">
-      <input type="text" v-model="menuAdd" />
-      <button @click="add">메뉴 추가</button>
+      <input class="input-with-space" type="text" v-model="tripAdd" />
+      <button class="button-with-space" @click="add">여행지 추가</button>
+      <input class="input-with-space" type="text" v-model="tripDelete" />
+      <button class="button-with-space" @click="drop">여행지 삭제</button>
     </div>
   </div>
 </template>
@@ -172,13 +194,20 @@ button:active {
   position: absolute;
   top: 9%;
   left: 50%;
-
-  width: 20px;
-  height: 20px;
+  width: 0;
+  height: 0;
   border-style: solid;
-  border-width: 25px 5px 0 5px;
+  border-width: 25px 15px 0 15px;
   border-color: black transparent transparent transparent;
+  margin-left: -15px;
+  z-index: 1;
+}
 
-  margin-left: -5px;
+.button-with-space {
+  margin-right: 12px;
+}
+
+.input-with-space {
+  margin-right: 12px;
 }
 </style>
