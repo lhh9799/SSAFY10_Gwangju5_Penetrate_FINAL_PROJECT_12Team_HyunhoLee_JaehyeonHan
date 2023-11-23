@@ -452,3 +452,11 @@ main {
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
 }
 </style>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+</style>
