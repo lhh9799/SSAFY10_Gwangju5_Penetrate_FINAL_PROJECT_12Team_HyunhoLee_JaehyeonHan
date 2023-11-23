@@ -22,10 +22,10 @@ const logout = () => {
 
 let input = ref("");
 const boardList = [
-  { id: 1, name: "놀이터", route: "playground" },
-  { id: 2, name: "HELP DESK", route: "2" },
-  { id: 3, name: "게시판", route: "board" },
-  { id: 4, name: "여행 계획 짜기", route: "map" },
+  { id: 1, name: "놀이터", route: "/playground" },
+  { id: 2, name: "HELP DESK", route: "/2" },
+  { id: 3, name: "게시판", route: "/board" },
+  { id: 4, name: "여행 계획 짜기", route: "/map" },
 ];
 
 function filteredList() {
@@ -44,7 +44,7 @@ const navigateToRoute = (id) => {
 const clearInput = () => {
   setTimeout(() => {
     input.value = "";
-  }, 50);
+  }, 100);
 };
 </script>
 
