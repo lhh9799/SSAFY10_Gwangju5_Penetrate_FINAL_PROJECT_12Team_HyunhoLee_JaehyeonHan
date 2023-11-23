@@ -1,11 +1,11 @@
 <script>
+import { ref } from "vue";
 export default {
   data() {
     return {
-      options: ["1", "2", "3", "4", "5", "6", "7", "8"],
+      options: ref(["꽝"]),
+      selectedTravel: "",
       startAngle: 0,
-      // arc: Math.PI / (this.options.length / 2),
-      arc: Math.PI / 1.5,
       spinTimeout: null,
       spinArcStart: 10,
       spinTime: 0,
@@ -14,6 +14,13 @@ export default {
     };
   },
   methods: {
+    add(id, event) {
+      if (id) {
+        this.options.push(id);
+        console.log(this.options);
+        this.drawRouletteWheel();
+      }
+    },
     byte2Hex(n) {
       var nybHexString = "0123456789ABCDEF";
       return String(nybHexString.substr((n >> 4) & 0x0f, 1)) + nybHexString.substr(n & 0x0f, 1);
@@ -35,6 +42,7 @@ export default {
     },
     drawRouletteWheel() {
       var canvas = this.$refs.canvas;
+
       if (canvas.getContext) {
         var outsideRadius = 200;
         var textRadius = 160;
@@ -49,12 +57,26 @@ export default {
         this.ctx.font = "bold 12px Helvetica, Arial";
 
         for (var i = 0; i < this.options.length; i++) {
-          var angle = this.startAngle + i * this.arc;
+          var angle = this.startAngle + (i * Math.PI) / (this.options.length / 2);
           this.ctx.fillStyle = this.getColor(i, this.options.length);
 
           this.ctx.beginPath();
-          this.ctx.arc(250, 250, outsideRadius, angle, angle + this.arc, false);
-          this.ctx.arc(250, 250, insideRadius, angle + this.arc, angle, true);
+          this.ctx.arc(
+            250,
+            250,
+            outsideRadius,
+            angle,
+            angle + Math.PI / (this.options.length / 2),
+            false
+          );
+          this.ctx.arc(
+            250,
+            250,
+            insideRadius,
+            angle + Math.PI / (this.options.length / 2),
+            angle,
+            true
+          );
           this.ctx.stroke();
           this.ctx.fill();
 
@@ -65,10 +87,10 @@ export default {
           this.ctx.shadowColor = "rgb(220,220,220)";
           this.ctx.fillStyle = "black";
           this.ctx.translate(
-            250 + Math.cos(angle + this.arc / 2) * textRadius,
-            250 + Math.sin(angle + this.arc / 2) * textRadius
+            250 + Math.cos(angle + Math.PI / (this.options.length / 2) / 2) * textRadius,
+            250 + Math.sin(angle + Math.PI / (this.options.length / 2) / 2) * textRadius
           );
-          this.ctx.rotate(angle + this.arc / 2 + Math.PI / 2);
+          this.ctx.rotate(angle + Math.PI / (this.options.length / 2) / 2 + Math.PI / 2);
           var text = this.options[i];
           this.ctx.fillText(text, -this.ctx.measureText(text).width / 2, 0);
           this.ctx.restore();
@@ -110,13 +132,17 @@ export default {
     stopRotateWheel() {
       clearTimeout(this.spinTimeout);
       var degrees = (this.startAngle * 180) / Math.PI + 90;
-      var arcd = (this.arc * 180) / Math.PI;
+      var arcd = ((Math.PI / (this.options.length / 2)) * 180) / Math.PI;
       var index = Math.floor((360 - (degrees % 360)) / arcd);
       this.ctx.save();
       this.ctx.font = "bold 30px Helvetica, Arial";
       var text = this.options[index];
+      localStorage.setItem("result", text);
       this.ctx.fillText(text, 250 - this.ctx.measureText(text).width / 2, 250 + 10);
       this.ctx.restore();
+
+      // Add a setTimeout to delay the execution of the search function
+      setTimeout(() => {}, 100);
     },
     easeOut(t, b, c, d) {
       var ts = (t /= d) * t;
@@ -158,32 +184,93 @@ const videos = ref([]);
 const youtubeAPI = "AIzaSyC0jFEm56-TWkfH9i4qy1cH76qytsX2Dvc";
 
 const search = () => {
-  const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=2&q=${inputText.value}&type=video&key=${youtubeAPI}`;
+  setTimeout(() => {
+    inputText.value = localStorage.getItem("result");
 
-  fetch(youtubeURL)
-    .then((response) => response.json())
-    .then((data) => {
-      videos.value = data.items;
-    })
-    .catch((error) => console.error("Error fetching YouTube API:", error));
-};
+    if (inputText.value === "꽝") {
+      alert("꽝입니다! 다시 돌려보세요!");
+      return;
+    }
+    const youtubeURL = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&q=${inputText.value} vlog&type=video&key=${youtubeAPI}`;
 
-// 날씨 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    fetch(youtubeURL)
+      .then((response) => response.json())
+      .then((data) => {
+        videos.value = data.items;
+      })
+      .catch((error) => console.error("Error fetching YouTube API:", error));
 
-const api_key = "71178a1660c842af87a8bdb5b75ad159";
-const url_base = "https://api.openweathermap.org/data/2.5/";
+    if (inputText.value === "서울") {
+      lat.value = 37.583328;
+      lon.value = 126.977969;
+    } else if (inputText.value === "강원도") {
+      lat.value = 37.874722;
+      lon.value = 127.734169;
+    } else if (inputText.value === "광주") {
+      lat.value = 35.166672;
+      lon.value = 126.916672;
+    } else if (inputText.value === "경기도") {
+      lat.value = 37.741501;
+      lon.value = 127.047401;
+    } else if (inputText.value === "경상남도") {
+      lat.value = 35.228062;
+      lon.value = 128.681107;
+    } else if (inputText.value === "경상북도") {
+      lat.value = 36.565559;
+      lon.value = 128.725006;
+    } else if (inputText.value === "부산") {
+      lat.value = 35.133331;
+      lon.value = 129.050003;
+    } else if (inputText.value === "울산") {
+      lat.value = 35.566669;
+      lon.value = 129.266663;
+    } else if (inputText.value === "인천") {
+      lat.value = 37.450001;
+      lon.value = 126.416107;
+    } else if (inputText.value === "전라남도") {
+      lat.value = 34.989719;
+      lon.value = 126.47139;
+    } else if (inputText.value === "전라북도") {
+      lat.value = 35.821941;
+      lon.value = 127.148888;
+    } else if (inputText.value === "제주도") {
+      lat.value = 33.50972;
+      lon.value = 126.521942;
+    } else if (inputText.value === "충청남도") {
+      lat.value = 36.5184;
+      lon.value = 126.8;
+    } else if (inputText.value === "충청북도") {
+      lat.value = 36.637218;
+      lon.value = 127.489723;
+    } else if (inputText.value === "세종특별자치시") {
+      lat.value = 36.4800121;
+      lon.value = 127.2890691;
+    } else if (inputText.value === "대전") {
+      lat.value = 36.35044;
+      lon.value = 127.3845;
+    } else if (inputText.value === "대구") {
+      lat.value = 35.8714;
+      lon.value = 128.6014;
+    }
 
-const query = ref("");
-const weather = ref({});
+    regionName.value = inputText.value;
 
-const fetchWeather = (e) => {
-  if (e.key === "Enter") {
-    let fetchUrl = `${url_base}weather?q=${query.value}&units=metric&APPID=${api_key}`;
-    fetch(fetchUrl)
+    let weatherURL = `${url_base}weather?lat=${lat.value}&lon=${lon.value}&APPID=${weaterAPI}`;
+    fetch(weatherURL)
       .then((res) => res.json())
       .then((results) => setResult(results));
-  }
+  }, 4500);
 };
+// 날씨 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+const weaterAPI = "71178a1660c842af87a8bdb5b75ad159";
+const url_base = "https://api.openweathermap.org/data/2.5/";
+
+const lat = ref({});
+const lon = ref({});
+const regionName = ref({});
+
+const weather = ref({});
 
 const setResult = (results) => {
   weather.value = results;
@@ -212,6 +299,9 @@ const dateBuilder = () => {
   let year = d.getFullYear();
   return `${day} ${date} ${month} ${year}`;
 };
+
+// 룰렛
+const selectedTravel = ref();
 </script>
 
 <template>
@@ -225,22 +315,13 @@ const dateBuilder = () => {
         "
       >
         <main>
-          <div class="search-box">
-            <input
-              type="text"
-              class="search-bar"
-              placeholder="Search..."
-              v-model="query"
-              @keypress="fetchWeather"
-            />
-          </div>
           <div class="weather-wrap" v-if="typeof weather.main !== 'undefined'">
             <div class="location-box">
-              <div class="location">{{ weather.name }}, {{ weather.sys.country }}</div>
+              <div class="location">{{ regionName }}, {{ weather.sys.country }}</div>
               <div class="date">{{ dateBuilder() }}</div>
             </div>
             <div class="weather-box">
-              <div class="temp">{{ Math.round(weather.main.temp) }}℃</div>
+              <div class="temp">{{ Math.round(weather.main.temp) - 273 }}℃</div>
             </div>
           </div>
         </main>
@@ -248,30 +329,66 @@ const dateBuilder = () => {
     </div>
 
     <!-- 룰렛 -->
-    <div>
-      <input type="button" value="Spin" style="float: left" @click="spin" />
-      <canvas ref="canvas" width="500" height="500"></canvas>
+
+    <div class="roulette">
+      <div class="roulette-container">
+        <div>
+          <canvas ref="canvas" width="500" height="500"></canvas>
+        </div>
+        <div id="addDiv">
+          <button class="button-with-space" @click="[spin(), search()]">SPIN</button>
+          <div>
+            <select v-model="selectedTravel" class="input-with-space">
+              <option v-for="location in travelList" :key="location" :value="location">
+                {{ location }}
+              </option>
+            </select>
+            <button class="button-with-space" @click="add(selectedTravel, $event)">
+              여행지 추가
+            </button>
+          </div>
+        </div>
+
+        <!-- <select v-model="tripDelete" class="input-with-space">
+          <option v-for="location in product" :key="location" :value="location">
+            {{ location }}
+          </option>
+        </select>
+        <button class="button-with-space" @click="drop">여행지 삭제</button> -->
+      </div>
     </div>
 
     <!-- 유튜브 -->
     <div class="youtube">
-      <form @submit.prevent="search">
-        <input v-model="inputText" placeholder="검색어를 입력하세요" />
-        <button type="submit">검색</button>
-      </form>
-      <ul>
-        <li v-for="video in videos" :key="video.id">
+      <div class="youtubeThumb">
+        <div class="youtubeTitle">관련 영상</div>
+        <div v-for="video in videos" :key="video.id">
           <a :href="'https://www.youtube.com/watch?v=' + video.id.videoId" target="_blank">
-            <img :src="video.snippet.thumbnails.default.url" alt="Video Thumbnail" />
-            <p>{{ video.snippet.title }}</p>
+            <img :src="video.snippet.thumbnails.medium.url" alt="Video Thumbnail" />
+            <p class="font">{{ video.snippet.title }}</p>
           </a>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+#addDiv {
+  text-align: center;
+}
+.youtubeTitle {
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+}
+.font {
+  color: black;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
 body {
   background: #f7f8fc;
   height: 960px;
@@ -313,19 +430,6 @@ button:active {
   height: 0;
 }
 
-.roulette-pin {
-  position: absolute;
-  top: 9%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 25px 15px 0 15px;
-  border-color: black transparent transparent transparent;
-  margin-left: -15px;
-  z-index: 1;
-}
-
 .button-with-space {
   margin-right: 12px;
 }
@@ -340,17 +444,17 @@ button:active {
   width: 90%;
   margin: 10px auto;
   display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .weather {
-  border: 1px solid red;
   flex: 1;
   width: 30%;
   box-sizing: border-box;
 }
 
 .roulette {
-  border: 1px solid green;
   flex: 1;
   margin: 0px 5%;
   width: 30%;
@@ -360,12 +464,13 @@ button:active {
 }
 
 .youtube {
-  border: 1px solid blue;
   flex: 1;
   width: 30%;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
+  text-align: center;
+  align-self: flex-start;
 }
 
 * {
@@ -377,17 +482,14 @@ body {
   font-family: "montserrat", sans-serif;
 }
 #app {
-  background-image: url("./assets/cold-bg.jpg");
   background-size: cover;
   background-position: bottom;
   transition: 0.4s;
 }
-#app.warm {
-  background-image: url("./assets/warm-bg.jpg");
-}
 main {
-  min-height: 100vh;
+  height: 550px;
   padding: 25px;
+  border-radius: 20px;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.75));
 }
 .search-box {

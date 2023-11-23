@@ -18,6 +18,18 @@
 		<result column="user_id" property="userId"/>
 		<result column="user_password" property="newUserPwd"/>
 	</resultMap>
+	
+	<!-- <resultMap type="ItineraryDto" id="ItineraryDto"> -->
+	<resultMap type="itineraryDto" id="itineraryDto">
+		<result column="user_id" property="userId"/>
+		<result column="day" property="day"/>
+		<result column="title" property="title"/>
+		<result column="content_id" property="contentId"/>
+		<result column="addr" property="addr"/>
+		<result column="latitude" property="latitude"/>
+		<result column="longtitude" property="longtitude"/>
+		<result column="sequence" property="sequence"/>
+	</resultMap>
 
 	<select id="login" parameterType="map" resultMap="member">
 		select user_id, user_name, token
@@ -75,4 +87,33 @@
 		WHERE user_id = #{userId}
 	</update>
 	
+	<!-- 이현호 추가 -->
+	<!-- <insert id="registerPlan" parameterMap="ItineraryDto"> -->
+	<insert id="registPlan">
+		<!-- INSERT INTO itinerary(user_id, day, title, content_id, addr, latitude, longtitude, sequence)
+		VALUES('ssafy', '1', '국립 청태산자연휴양림', '125266', '강원도 횡성군 둔내면 청태산로 610', '37.52251412000000000', '128.29191150000000000', 1); -->
+		
+		INSERT INTO itinerary(user_id, day, title, content_id, addr, latitude, longtitude, sequence)
+		VALUES(#{userId}, #{day}, #{title}, #{contentId}, #{addr}, #{latitude}, #{longtitude}, #{sequence});
+	</insert>
+	
+	<!-- 이현호 추가 -->
+	<select id="getPlan" parameterType="string" resultMap="itineraryDto">
+	<!-- <select id="getPlan" parameterType="string" resultType="com.ssafy.vue.member.model.ItineraryDto"> -->
+		<!-- SELECT * FROM itinerary WHERE user_id = 'ssafy'; -->
+		SELECT * FROM itinerary WHERE user_id = #{userId} ORDER BY sequence;
+	</select>
+	
+	<!-- 이현호 추가 -->
+	<update id="deleteOneDayPlan" parameterType="Map">
+		DELETE FROM itinerary
+		WHERE user_id = #{userId} AND day = #{day}
+	</update>
+
+	<!-- 한재현 추가 -->
+	<select id="duplicateCheck" parameterType="String">
+		select count(*)
+		from members
+		where user_id = #{userId}
+	</select>
 </mapper>
