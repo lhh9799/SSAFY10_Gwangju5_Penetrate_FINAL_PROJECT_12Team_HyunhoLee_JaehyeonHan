@@ -117,7 +117,7 @@ const clearInput = () => {
           <input
             type="text"
             v-model="input"
-            placeholder="찾길 원하는 메뉴를 검색해주세요."
+            placeholder="메뉴를 검색해보세요."
             @blur="clearInput"
           />
           <div class="search-results" v-if="input && filteredList().length">

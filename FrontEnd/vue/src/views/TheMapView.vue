@@ -275,7 +275,7 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
                 </div>
             </div>
             <div class='right-area'>
-                <TheItineraryView :selectedItineraries='selectedItineraries'></TheItineraryView>
+                <TheItineraryView :selectedItineraries='selectedItineraries' @clearProps='selectedItineraries.value = []'></TheItineraryView>
             </div>
         </div>
     </div>

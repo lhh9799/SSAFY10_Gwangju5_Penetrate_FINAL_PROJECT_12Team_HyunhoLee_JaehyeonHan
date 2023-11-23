@@ -37,6 +37,7 @@ import draggable from "vuedraggable";
 import { registPlan, getPlan } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
+const emit = defineEmits(["clearProps"]);
 const props = defineProps({ selectedItineraries: Array });
 const memberStoreData = JSON.parse(localStorage.getItem("memberStore"));
 const userId = memberStoreData.userInfo.userId;
@@ -71,6 +72,8 @@ const loadData = () => {
 
     //로그인한 사용자의 최대 여행 일수 계산
     userTravelDays.value = Math.max(userTravelDays.value, item.day);
+
+    emit("clearProps"); //체크박스 선택된 값 삭제
   });
 };
 

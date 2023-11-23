@@ -27,6 +27,8 @@ public class KMP {
 		profanitySet.add("지랄");
 		profanitySet.add("존나");
 		profanitySet.add("염병");
+		profanitySet.add("제기랄");
+		profanitySet.add("개고생");
 	}
 	
 	public static KMP getInstance() {
