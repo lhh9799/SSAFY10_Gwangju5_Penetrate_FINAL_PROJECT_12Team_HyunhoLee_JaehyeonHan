@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { listAttraction, getSidoFromSidoTable, getgugunDtoFromSidoTable } from "@/api/map";
 
 import AttractionKakaoMap from "@/components/common/AttractionKakaoMap.vue";
@@ -214,25 +214,12 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
             selectedItineraries.value.splice(index, 1);
         }
     }
-
-    // console.log('반응형 변수 변경');
-    // console.log(selectedItineraries.value);
 };
-
-//삭제 가능
-// watch(
-//     () => selectedItineraries.value,
-//     (value) => {
-//         console.log('value');
-//         console.log(value);
-//     }
-// );
 </script>
 
 <template>
     <!-- <div class="container text-center mt-3"> -->
     <div class="text-center" style='width: 90%; margin: auto;'>
-    <!-- <div> -->
         <div class="alert alert-success" role="alert">여행지 정보</div>
         <div class='content'>
             <div class='left-area'>
@@ -256,10 +243,8 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
                     </template>
 
                     <!-- 전체 선택, 전채 선택 해제 버튼 -->
-                    <!-- <div class='checkbox-buttons'> -->
-                        <button class="btn btn-outline-success" type="button" id='deselect-all' @click='selectAllAttractionType'>전체 선택</button>
-                        <button class="btn btn-outline-primary" type="button" id='deselect-all' @click='deselectAllAttractionType'>전체 선택 해제</button>
-                    <!-- </div> -->
+                    <button class="btn btn-outline-success" type="button" id='deselect-all' @click='selectAllAttractionType'>전체 선택</button>
+                    <button class="btn btn-outline-primary" type="button" id='deselect-all' @click='deselectAllAttractionType'>전체 선택 해제</button>
                 </div>
 
                 <div>
@@ -277,20 +262,13 @@ const onChangeItineraryCheckbox = (attractionInfo) => {
                         </thead>
                         <tbody>
                             <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType" @click="viewAttractionInfoList(attractionInfo)">
-                            <!-- <tr class="text-center" v-for="attractionInfo in attractionInfoList" :key="attractionInfo.contentType"> -->
                                 <th><img :src='attractionInfo.firstImage' style='height: 50px;'></th>
                                 <td>{{ attractionTypeMap.get(attractionInfo.contentTypeId) }}</td>
                                 <td>{{ attractionInfo.title }}</td>
                                 <td>{{ sidoTypeMap.get(attractionInfo.sidoCode) }}</td>
                                 <td>{{ attractionInfo.addr1 }}</td>
                                 <!-- 아래는 수정 중 (완료 X) -->
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @click='onChangeItineraryCheckbox(attractionInfo, $event)' class='attraction-options'></td> -->
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @click='onChangeItineraryCheckbox(attractionInfo, $event)' v-model='attractionInfo.isSelected' class='attraction-options'></td> -->
                                 <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @change='onChangeItineraryCheckbox(attractionInfo)' v-model='attractionInfo.isSelected' class='attraction-options'></td>
-
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' @click='onChangeItineraryCheckbox(attractionInfo)' v-model='selectedItineraries' class='attraction-options'></td> -->
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' v-model='selectedItineraries' @change='onChangeItineraryCheckbox()' class='attraction-options'></td> -->
-                                <!-- <td><input type='checkbox' :value='attractionInfo.contentId' :id='"selected_" + attractionInfo.contentId' v-model='selectedItineraries' class='attraction-options'></td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -337,7 +315,6 @@ mark.purple {
 
 .content {
     display: flex;
-    /* flex-wrap: wrap; */
 }
 
 .left-area {

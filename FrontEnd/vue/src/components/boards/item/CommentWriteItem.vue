@@ -104,7 +104,6 @@ function onSubmit() {
                 <p>
                   <span class="fw-bold">{{ newWrittenComment.userId }}</span> <br />
                   <span class="text-secondary fw-light">
-                    <!-- {{ comment.registerTime }} -->
                     작성일: {{ today }}
                   </span>
                 </p>

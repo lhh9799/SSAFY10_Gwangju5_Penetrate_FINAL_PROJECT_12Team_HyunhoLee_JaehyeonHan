@@ -43,8 +43,6 @@ async function registPlan(itineraryDto, success, fail) {
 }
 
 async function getPlan(userId, success, fail) {
-  console.log('getPlan - userId');
-  console.log(userId);
   await local.get(`/user/plan/${userId}`, userId).then(success).catch(fail);
 }
 

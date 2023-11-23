@@ -5,8 +5,6 @@ var map;
 const positions = ref([]);
 const markers = ref([]);
 
-// const props = defineProps({ attractionInfoList: Array, selectAttraction: Object });
-//이현호
 const props = defineProps({ attractionInfoList: Array, selectAttraction: Object, itineraryAttraction: Array });
 
 watch(
