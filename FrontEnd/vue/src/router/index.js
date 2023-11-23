@@ -101,6 +101,9 @@ router.beforeEach((to, from, next) => {
     "estations",
     "article-list",
     "article-view",
+    "article-write",
+    "article-modify",
+    "map",
   ];
 
   if (!memberStore.isLogin && loginRequiredRoutes.includes(to.name)) {
