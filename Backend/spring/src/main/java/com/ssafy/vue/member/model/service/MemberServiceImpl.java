@@ -2,10 +2,12 @@ package com.ssafy.vue.member.model.service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.vue.member.model.ItineraryDto;
 import com.ssafy.vue.member.model.MemberDto;
 import com.ssafy.vue.member.model.NewPwdDto;
 import com.ssafy.vue.member.model.mapper.MemberMapper;
@@ -73,6 +75,19 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public void registPlan(ItineraryDto itineraryDto) throws SQLException {
+		memberMapper.registPlan(itineraryDto);
+	}
+
+	@Override
+	public List<ItineraryDto> getPlan(String userId) throws SQLException {
+		return memberMapper.getPlan(userId);
+	}
+
+	@Override
+	public void deleteOneDayPlan(Map<String, Object> map) throws SQLException {
+		memberMapper.deleteOneDayPlan(map);
+	}
 	public int duplicateCheck(String userId) throws SQLException {
 		return memberMapper.duplicateCheck(userId);}
 

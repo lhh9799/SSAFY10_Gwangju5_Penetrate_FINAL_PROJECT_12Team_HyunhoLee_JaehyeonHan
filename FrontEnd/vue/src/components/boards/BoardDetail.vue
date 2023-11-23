@@ -123,13 +123,10 @@ function onDeleteArticle() {
       </div>
 
       <div class="col-lg-10">
-        <!-- <div class="alert alert-warning" role="warning"> -->
         <h2 class="my-3 py-3 shadow-sm bg-warning text-center">
           <mark class="white">답변</mark>
         </h2>
       </div>
-      <!-- </div> -->
-      <!-- <div class="row justify-content-center"> -->
       <div class="container text-center mt-3">
         <CommentModifyItem
           v-for="comment in article.comments"

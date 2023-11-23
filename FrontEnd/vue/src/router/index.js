@@ -81,13 +81,6 @@ const router = createRouter({
       name: "todos",
       component: () => import("@/views/TheTodoView.vue"),
     },
-    //이현호 테스트 Vue Draggable
-    {
-      path: "/draggable",
-      name: "draggable",
-      component: () => import("@/views/TheDraggableView.vue"),
-    },
-    //이현호 테스트 Vue Draggable
     {
       path: "/map",
       name: "map",
