@@ -125,3 +125,11 @@ mark.purple {
   background: linear-gradient(to top, #c354ff 20%, transparent 30%);
 }
 </style>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+</style>

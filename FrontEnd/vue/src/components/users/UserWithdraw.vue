@@ -114,3 +114,11 @@ const withDraw = () => {
   transform: scale(1.1);
 }
 </style>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+</style>

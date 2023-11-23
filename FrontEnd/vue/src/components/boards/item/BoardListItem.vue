@@ -21,6 +21,12 @@ defineProps({ article: Object });
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
 a {
   text-decoration: none;
 }

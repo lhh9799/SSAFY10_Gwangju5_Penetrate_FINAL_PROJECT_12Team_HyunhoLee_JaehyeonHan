@@ -10,4 +10,10 @@ import TheHeadingNavbar from "@/components/layout/TheHeadingNavbar.vue";
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+</style>
