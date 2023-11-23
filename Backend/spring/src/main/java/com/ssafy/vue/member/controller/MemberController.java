@@ -153,7 +153,6 @@ public class MemberController {
 	public ResponseEntity<?> join(
 			@RequestBody @ApiParam(value = "로그인 시 필요한 회원정보(아이디, 비밀번호).", required = true) MemberDto memberDto) {
 		log.debug("join user : {}", memberDto);
-		System.out.println("전달받은 memberDto: " + memberDto);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
@@ -192,7 +191,6 @@ public class MemberController {
 	@PostMapping("/check")
 	public ResponseEntity<?> checkPwd(
 			@RequestBody @ApiParam(value = "내 정보 수정 시 필요한 비밀번호.", required = true) IdAndPwdDto idAndPwd) {
-		System.out.println("전달받은 IdAndPwd: " + idAndPwd);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		
@@ -216,7 +214,6 @@ public class MemberController {
 	@PostMapping("/modify")
 	public ResponseEntity<?> modifyPwd(
 			@RequestBody @ApiParam(value = "변경할 새로운 비밀번호", required = true) NewPwdDto newPwd) {
-		System.out.println("전달받은 newPwd: " + newPwd);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
@@ -235,7 +232,6 @@ public class MemberController {
 	@PostMapping("/plan")
 	public ResponseEntity<Map<String, Object>> registPlan(
 			@RequestBody @ApiParam(value = "여행 계획", required = true) List<ItineraryDto> itineraryDtoList) {
-		System.out.println("registPlan itineraryDto 받은 매개변수: " + itineraryDtoList);
 		log.debug("registPlan ItineraryDto : {}", itineraryDtoList);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
@@ -273,14 +269,12 @@ public class MemberController {
 	//이현호 추가
 	@ApiOperation(value = "여행 계획 조회", notes = "여행 계획 조회 정보를 담은 Dto을 반환한다.", response = Map.class)
 	@GetMapping("/plan/{userId}")
-//	public ResponseEntity<Map<String, Object>> getPlan(
 	public ResponseEntity<List<ItineraryDto>> getPlan(
 			@PathVariable("userId") @ApiParam(value = "여행 계획을 가져올 회원의 아이디.", required = true) String userId,
 			HttpServletRequest request) throws SQLException {
 		log.debug("getPlan : {} ", userId);
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		System.out.println("MemberController - getPlan 결과" + memberService.getPlan(userId));
 		
 		return new ResponseEntity<List<ItineraryDto>>(memberService.getPlan(userId), HttpStatus.OK);
 	}
@@ -332,7 +326,6 @@ public class MemberController {
 	@GetMapping("/exist/{userId}")
 	public ResponseEntity<?> duplicateCheck(
 			@RequestBody @PathVariable ("userId") @ApiParam(value = "로그아웃할 회원의 아이디.", required = true) String userId) {
-		System.out.println("전달받은 userID: " + userId);
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {

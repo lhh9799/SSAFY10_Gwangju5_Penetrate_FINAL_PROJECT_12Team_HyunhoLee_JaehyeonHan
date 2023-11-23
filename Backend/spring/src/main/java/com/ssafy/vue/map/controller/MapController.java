@@ -62,16 +62,13 @@ public class MapController {
 			newMap.put(key, Integer.parseInt(map.get(key)));
 		}
 		
-		System.out.println("mapService.getAttraction(newMap): " + mapService.getAttraction(newMap));
 		return new ResponseEntity<List<AttractionInfoDto>>(mapService.getAttraction(newMap), HttpStatus.OK);
-//		return new ResponseEntity<List<AttractionInfoDto>>(mapService.getAttraction((Map<String, Integer>) map), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "'sido테이블'의 시/도 정보", notes = "'sido테이블'의 시/도 정보를 반환한다.", response = List.class)
 	@GetMapping("/sidoDtoFromSidoTable")
 	public ResponseEntity<List<SidoDtoFromSidoTable>> sidoDtoFromSidoTable() throws Exception {
 		log.info("sidoDtoFromSidoTable - 호출");
-		System.out.println("mapService.getSidoFromSidoTable(): " + mapService.getSidoFromSidoTable());
 		return new ResponseEntity<List<SidoDtoFromSidoTable>>(mapService.getSidoFromSidoTable(), HttpStatus.OK);
 	}
 	
@@ -80,7 +77,6 @@ public class MapController {
 	public ResponseEntity<List<GugunDtoFromSidoTable>> gugunDtoFromSidoTable(
 			@RequestParam("sido") @ApiParam(value = "시도코드.", required = true) int sido) throws Exception {
 		log.info("gugunDtoFromSidoTable - 호출");
-		System.out.println("mapService.getGugunFromGugunTable(sido): " + mapService.getGugunFromGugunTable(sido));
 		return new ResponseEntity<List<GugunDtoFromSidoTable>>(mapService.getGugunFromGugunTable(sido), HttpStatus.OK);
 	}
 }

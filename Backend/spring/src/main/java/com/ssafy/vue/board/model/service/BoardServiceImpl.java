@@ -13,21 +13,38 @@ import com.ssafy.vue.board.model.BoardListDto;
 import com.ssafy.vue.board.model.CommentDto;
 import com.ssafy.vue.board.model.FileInfoDto;
 import com.ssafy.vue.board.model.mapper.BoardMapper;
+import com.ssafy.vue.util.KMP;
 
 @Service
 public class BoardServiceImpl implements BoardService {
 
 	private BoardMapper boardMapper;
+	private KMP kmp = KMP.getInstance();
 
 	@Autowired
 	public BoardServiceImpl(BoardMapper boardMapper) {
 		super();
 		this.boardMapper = boardMapper;
 	}
+	
+	public void profanityFilter(BoardDto boardDto) {
+		StringBuilder subject = new StringBuilder(boardDto.getSubject());
+		StringBuilder content = new StringBuilder(boardDto.getContent());
+		
+		int subjectPurifyCount = kmp.purifyString(subject);	//제목 순화
+		int contentPurifyCount = kmp.purifyString(content);	//본문 순화
+		
+		System.out.println("순화된 제목 개수: " + subjectPurifyCount);
+		System.out.println("순화된 본문 개수: " + contentPurifyCount);
+		
+		boardDto.setSubject(subject.toString());			//순화된 제목 Dto에 업데이트
+		boardDto.setContent(content.toString());			//순화된 본문 Dto에 업데이트
+	}
 
 	@Override
 	@Transactional
 	public void writeArticle(BoardDto boardDto) throws Exception {
+		profanityFilter(boardDto);							//제목 및 본문 순화
 		boardMapper.writeArticle(boardDto);
 		List<FileInfoDto> fileInfos = boardDto.getFileInfos();
 		if (fileInfos != null && !fileInfos.isEmpty()) {
@@ -109,6 +126,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void modifyArticle(BoardDto boardDto) throws Exception {
 		// TODO : BoardDaoImpl의 modifyArticle 호출
+		profanityFilter(boardDto);							//제목 및 본문 순화
 		boardMapper.modifyArticle(boardDto);
 	}
 

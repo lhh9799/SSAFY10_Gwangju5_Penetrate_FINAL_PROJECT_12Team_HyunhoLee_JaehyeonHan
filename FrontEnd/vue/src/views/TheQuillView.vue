@@ -166,7 +166,7 @@ onMounted(() => {
   //Loads original article after 100ms.
   setTimeout(function () {
     loadArticle();
-  }, 100);
+  }, 500);
 });
 
 const subjectErrMsg = ref("");

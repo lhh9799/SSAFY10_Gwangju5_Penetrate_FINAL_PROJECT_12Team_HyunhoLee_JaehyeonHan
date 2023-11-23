@@ -61,7 +61,6 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void delete(String userId) throws SQLException {
 		memberMapper.delete(userId);
-		System.out.println("userID = " + userId);
 	}
 
 	@Override

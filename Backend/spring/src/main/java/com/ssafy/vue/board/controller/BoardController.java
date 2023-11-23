@@ -69,7 +69,6 @@ public class BoardController {
 			BoardListDto boardListDto = boardService.listArticle(map);
 			HttpHeaders header = new HttpHeaders();
 			header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-			System.out.println("BoardController boardListDto: " + boardListDto);
 			return ResponseEntity.ok().headers(header).body(boardListDto);
 		} catch (Exception e) {
 			return exceptionHandling(e);
@@ -130,6 +129,7 @@ public class BoardController {
 	public ResponseEntity<?> writeComment(
 			@RequestBody @ApiParam(value = "댓글 정보.", required = true) CommentDto commentDto) {
 		log.info("writeComment commentDto - {}", commentDto);
+		System.out.println("writeComment commentDto - {}" + commentDto);
 		try {
 			boardService.writeComment(commentDto);
 //			return ResponseEntity.ok().build();

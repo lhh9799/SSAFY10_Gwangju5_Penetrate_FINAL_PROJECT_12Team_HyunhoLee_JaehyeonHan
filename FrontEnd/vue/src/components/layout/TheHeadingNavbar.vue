@@ -24,7 +24,7 @@ let input = ref("");
 const boardList = [
   { id: 1, name: "놀이터", route: "/playground" },
   { id: 2, name: "HELP DESK", route: "/2" },
-  { id: 3, name: "게시판", route: "/board" },
+  { id: 3, name: "여행 후기 게시판", route: "/board" },
   { id: 4, name: "여행 계획 짜기", route: "/map" },
 ];
 
@@ -106,7 +106,7 @@ const clearInput = () => {
             </ul>
           </li>
           <li class="nav-item">
-            <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
+            <router-link :to="{ name: 'board' }" class="nav-link">여행 후기 게시판</router-link>
           </li>
           <!-- 이현호 테스트 여행지 정보 -->
           <li class="nav-item">
